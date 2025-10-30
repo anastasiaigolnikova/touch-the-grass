@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>🌿 трава</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #b8c8a6, #8a9b7a);
+            position: relative;
+        }
+
+        #grassCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            cursor: pointer;
+            will-change: transform;
+        }
+
+        .pearl {
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), rgba(240, 245, 240, 0.85));
+            border-radius: 50%;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset -2px -2px 8px rgba(0, 0, 0, 0.1),
+                inset 2px 2px 8px rgba(255, 255, 255, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 40px rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s ease;
+            pointer-events: all;
+            animation: pearlRise 1.5s ease-out forwards, pearlGlow 2s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        .pearl:hover {
+            transform: scale(1.2) !important;
+        }
+
+        .pearl:active {
+            transform: scale(0.9) !important;
+        }
+
+        @keyframes pearlRise {
+            0% {
+                transform: translateY(100px) scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pearlGlow {
+            0%, 100% {
+                box-shadow: 
+                    0 4px 12px rgba(0, 0, 0, 0.15),
+                    inset -2px -2px 8px rgba(0, 0, 0, 0.1),
+                    inset 2px 2px 8px rgba(255, 255, 255, 0.8),
+                    0 0 20px rgba(255, 255, 255, 0.6),
+                    0 0 40px rgba(255, 255, 255, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 4px 12px rgba(0, 0, 0, 0.15),
+                    inset -2px -2px 8px rgba(0, 0, 0, 0.1),
+                    inset 2px 2px 8px rgba(255, 255, 255, 0.8),
+                    0 0 30px rgba(255, 255, 200, 0.8),
+                    0 0 60px rgba(255, 255, 200, 0.5);
+            }
+        }
+
+        .pearl::before {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            filter: blur(2px);
+        }
+
+        #pearlModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #pearlModal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        #pearlContent {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 50px 40px;
+            border-radius: 32px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            font-size: 20px;
+            line-height: 1.6;
+            color: #2a3a2a;
+            position: relative;
+            animation: modalSlideIn 0.4s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(30px) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes modalEvaporate {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+                filter: blur(0px);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.05);
+                opacity: 0.7;
+                filter: blur(2px);
+            }
+            100% {
+                transform: translateY(-60px) scale(1.15);
+                opacity: 0;
+                filter: blur(10px);
+            }
+        }
+
+        #pearlContent.evaporating {
+            animation: modalEvaporate 0.8s ease-out forwards;
+        }
+
+        #pearlText {
+            font-weight: 500;
+            white-space: pre-line;
+            margin: 0;
+        }
+
+        #closeModal {
+            display: none;
+        }
+
+        /* Жители травы */
+        .creature {
+            position: fixed;
+            font-size: 24px;
+            z-index: 5;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .butterfly {
+            animation: butterflyFly 3s ease-out forwards, butterflyFlutter 0.3s ease-in-out infinite;
+        }
+
+        @keyframes butterflyFly {
+            0% {
+                transform: translate(0, 0) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes butterflyFlutter {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .firefly {
+            animation: fireflyRise var(--duration) ease-in-out forwards, fireflyGlow 1s ease-in-out infinite;
+            text-shadow: 0 0 8px rgba(255, 255, 150, 0.8);
+        }
+
+        @keyframes fireflyRise {
+            0% {
+                transform: translate(0, 0) scale(0.3);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            30% {
+                transform: translate(calc(var(--dx) * 0.3), calc(var(--dy) * 0.4)) scale(0.8);
+            }
+            60% {
+                transform: translate(calc(var(--dx) * 0.7), calc(var(--dy) * 0.6)) scale(1.1);
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0.7);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fireflyGlow {
+            0%, 100% { 
+                filter: brightness(1);
+                text-shadow: 0 0 8px rgba(255, 255, 150, 0.8);
+            }
+            50% { 
+                filter: brightness(1.6);
+                text-shadow: 0 0 16px rgba(255, 255, 150, 1);
+            }
+        }
+
+        .grasshopper {
+            animation: grasshopperJump 1.2s ease-out forwards;
+        }
+
+        @keyframes grasshopperJump {
+            0% {
+                transform: translate(0, 0) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            40% {
+                transform: translate(calc(var(--dx) * 0.5), -60px) scale(1) rotate(15deg);
+            }
+            100% {
+                transform: translate(var(--dx), 20px) scale(0.8) rotate(25deg);
+                opacity: 0;
+            }
+        }
+
+        /* Кролик - большие части тела */
+        .rabbit {
+            font-size: 120px; /* намного больше */
+            animation: rabbitPeek 2.5s ease-in-out forwards;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .rabbit-ears {
+            font-size: 100px;
+        }
+
+        .rabbit-nose {
+            font-size: 80px;
+        }
+
+        .rabbit-tail {
+            font-size: 90px;
+        }
+
+        @keyframes rabbitPeek {
+            0% {
+                transform: translateY(120px);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            35%, 65% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(120px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            #pearlContent {
+                max-width: 300px;
+                padding: 35px 30px;
+                font-size: 17px;
+            }
+            .pearl {
+                width: 28px;
+                height: 28px;
+            }
+            .creature {
+                font-size: 20px;
+            }
+            .rabbit {
+                font-size: 80px;
+            }
+            .rabbit-ears {
+                font-size: 70px;
+            }
+            .rabbit-nose {
+                font-size: 60px;
+            }
+            .rabbit-tail {
+                font-size: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="grassCanvas"></canvas>
+
+    <div id="pearlModal">
+        <div id="pearlContent">
+            <div id="pearlText"></div>
+            <button id="closeModal">🌿</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('grassCanvas');
+        const ctx = canvas.getContext('2d');
+        const modal = document.getElementById('pearlModal');
+        const pearlText = document.getElementById('pearlText');
+        const closeBtn = document.getElementById('closeModal');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        let grass = [];
+        let touchPos = null;
+        let windTime = 0;
+
+        const wisdoms = [
+            "осознанный выдох дольше вдоха",
+            "пей воду: 6 глотков",
+            "поменяй позу: смягчи челюсть",
+            "закрой глаза и слушай 10 сек",
+            "удали 3 лишних уведомления"
+        ];
+
+        let collected = JSON.parse(localStorage.getItem('grassPearls') || '[]');
+        let activePearls = [];
+        let touchMoveDistance = 0;
+        let lastTouchPos = null;
+        let touchStartTime = 0;
+        let touchCounter = 0; // Счётчик движений для появления жителей
+
+        // === ДВУХСЛОЙНАЯ ЗВУКОВАЯ СИСТЕМА ===
+        // Слой 1: Web Audio API — синтезированные звуки (космические)
+        let audioContext;
+        let windSound;
+        let isTouching = false;
+
+        // Слой 2: HTML5 Audio — реальные записи природы (фоновый ambient)
+        let ambientAudio = null;
+        let audioInitialized = false;
+
+        const AMBIENT_SOUNDS = [
+            "https://assets.mixkit.co/active_storage/sfx/2458/2458.wav", // birds + wind
+            "https://assets.mixkit.co/active_storage/sfx/513/513.wav"     // nature ambience
+        ];
+
+        // Инициализация Audio Context (синтезированные звуки)
+        function initAudio() {
+            if (audioInitialized) return;
+            audioInitialized = true;
+
+            // Web Audio API для синтезированных звуков
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                createWindSound();
+                createBirdSounds();
+                startIdleCreatures(); // Запускаем кузнечиков в покое
+            }
+
+            // HTML5 Audio для фоновой атмосферы (очень тихо)
+            ambientAudio = new Audio(AMBIENT_SOUNDS[0]);
+            ambientAudio.loop = true;
+            ambientAudio.volume = 0.08; // очень тихо, как далекий фон
+            ambientAudio.play().catch(() => {});
+        }
+
+        // Создаём фоновый синтезированный звук ветра
+        function createWindSound() {
+            const bufferSize = audioContext.sampleRate * 2;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * 0.03;
+            }
+            
+            windSound = audioContext.createBufferSource();
+            windSound.buffer = buffer;
+            windSound.loop = true;
+            
+            const windGain = audioContext.createGain();
+            windGain.gain.value = 0.10; // тише для мягкого фона
+            
+            const windFilter = audioContext.createBiquadFilter();
+            windFilter.type = 'lowpass';
+            windFilter.frequency.value = 800;
+            
+            windSound.connect(windFilter);
+            windFilter.connect(windGain);
+            windGain.connect(audioContext.destination);
+            
+            windSound.start(0);
+        }
+
+        // Создаём синтезированные звуки птиц (редко, тихо)
+        function createBirdSounds() {
+            setInterval(() => {
+                if (Math.random() > 0.85 && audioContext) {
+                    playBirdChirp();
+                }
+            }, 12000); // раз в 12 секунд
+        }
+
+        // Убрали монотонные сверчки - вместо них будут случайные кузнечики
+
+        function playBirdChirp() {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 2000 + Math.random() * 1000;
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.06, audioContext.currentTime + 0.01); // тише
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.15);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.15);
+        }
+
+
+        // Магический космический звук при появлении жемчужины
+        function playPearlAppearSound() {
+            if (!audioContext) return;
+            
+            const oscillator1 = audioContext.createOscillator();
+            const oscillator2 = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator1.type = 'sine';
+            oscillator1.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator1.frequency.exponentialRampToValueAtTime(1200, audioContext.currentTime + 0.3);
+            
+            oscillator2.type = 'sine';
+            oscillator2.frequency.setValueAtTime(1200, audioContext.currentTime);
+            oscillator2.frequency.exponentialRampToValueAtTime(1600, audioContext.currentTime + 0.3);
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.05);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator1.connect(gainNode);
+            oscillator2.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator1.start(audioContext.currentTime);
+            oscillator2.start(audioContext.currentTime);
+            oscillator1.stop(audioContext.currentTime + 0.3);
+            oscillator2.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Диджитальный звук травы при касании
+        function playGrassRustleSound() {
+            if (!audioContext) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator.type = 'brown';
+            filter.type = 'bandpass';
+            filter.frequency.value = 400 + Math.random() * 300;
+            filter.Q.value = 2;
+            
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+            
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.2);
+        }
+
+        // Звук бабочки
+        function playButterflySound() {
+            if (!audioContext) return;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1400, audioContext.currentTime + 0.15);
+            gain.gain.setValueAtTime(0, audioContext.currentTime);
+            gain.gain.linearRampToValueAtTime(0.05, audioContext.currentTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.15);
+        }
+
+        // Звук светлячка
+        function playFireflySound() {
+            if (!audioContext) return;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 1800;
+            gain.gain.setValueAtTime(0, audioContext.currentTime);
+            gain.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.05);
+            gain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.3);
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Звук кузнечика
+        function playGrasshopperSound() {
+            if (!audioContext) return;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = 'square';
+            osc.frequency.value = 3000 + Math.random() * 1000;
+            gain.gain.setValueAtTime(0, audioContext.currentTime);
+            gain.gain.linearRampToValueAtTime(0.06, audioContext.currentTime + 0.01);
+            gain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.08);
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.08);
+        }
+
+        // Класс травинки
+        class GrassBlade {
+            constructor(x, y, layer) {
+                this.x = x;
+                this.baseY = y;
+                this.y = y;
+                this.height = 180 + Math.random() * 300;
+                this.width = 6 + Math.random() * 9;
+                this.segments = 6; // ОПТИМИЗАЦИЯ: было 8, стало 6 сегментов
+                this.bendAmount = 0;
+                this.targetBend = 0;
+                this.windPhase = Math.random() * Math.PI * 2;
+                this.windSpeed = 0.5 + Math.random() * 0.5;
+                this.layer = layer;
+                
+                const hue = 80 + Math.random() * 40;
+                const sat = 40 + Math.random() * 30;
+                const light = 35 + Math.random() * 25;
+                this.color = `hsl(${hue}, ${sat}%, ${light}%)`;
+                this.tipColor = `hsl(${hue + 10}, ${sat + 10}%, ${light + 15}%)`;
+            }
+
+            update() {
+                const windForce = Math.sin(windTime * this.windSpeed + this.windPhase) * 3;
+                
+                let touchForce = 0;
+                if (touchPos) {
+                    // ОПТИМИЗАЦИЯ: упрощаем расчёт - только одна точка проверки
+                    const dx = this.x - touchPos.x;
+                    const dy = this.baseY - this.height * 0.5 - touchPos.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    const touchRadius = 200;
+                    if (dist < touchRadius) {
+                        const force = (1 - dist / touchRadius);
+                        touchForce = Math.sign(dx) * force * 150;
+                    }
+                }
+                
+                this.targetBend = windForce + touchForce;
+                this.bendAmount += (this.targetBend - this.bendAmount) * 0.25;
+            }
+
+            draw() {
+                const segmentHeight = this.height / this.segments;
+                
+                ctx.save();
+                ctx.globalAlpha = 0.6 + this.layer * 0.15;
+                
+                const gradient = ctx.createLinearGradient(
+                    this.x, this.baseY,
+                    this.x + this.bendAmount, this.baseY - this.height
+                );
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(0.7, this.color);
+                gradient.addColorStop(1, this.tipColor);
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = this.width;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.baseY);
+
+                for (let i = 1; i <= this.segments; i++) {
+                    const progress = i / this.segments;
+                    const bend = this.bendAmount * progress * progress;
+                    const wobble = Math.sin(progress * Math.PI) * 2;
+                    
+                    const x = this.x + bend + wobble;
+                    const y = this.baseY - segmentHeight * i;
+                    
+                    ctx.lineTo(x, y);
+                }
+
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
+        function initGrass() {
+            grass = [];
+            // ОПТИМИЗАЦИЯ: уменьшаем плотность травы для лучшей производительности
+            const density = width * height / 100; // было /50, стало /100 - в 2 раза меньше
+            
+            for (let layer = 0; layer < 3; layer++) {
+                const layerDensity = density / (layer + 1);
+                
+                for (let i = 0; i < layerDensity; i++) {
+                    const x = Math.random() * (width + 200) - 100;
+                    const y = Math.random() * (height + 200) - 100;
+                    grass.push(new GrassBlade(x, y, layer));
+                }
+            }
+            
+            grass.sort((a, b) => {
+                if (a.layer !== b.layer) return a.layer - b.layer;
+                return a.baseY - b.baseY;
+            });
+        }
+
+        function animate() {
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, '#c8d8b6');
+            gradient.addColorStop(0.6, '#a8b896');
+            gradient.addColorStop(1, '#7a8a6a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            windTime += 0.018;
+            
+            grass.forEach(blade => {
+                blade.update();
+                blade.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+
+        function handleTouch(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            
+            if (!audioContext) {
+                initAudio();
+            }
+            
+            if (lastTouchPos) {
+                const dx = x - lastTouchPos.x;
+                const dy = y - lastTouchPos.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                touchMoveDistance += dist;
+                
+                // Диджитальный звук травы при движении
+                if (dist > 3 && Math.random() > 0.6) {
+                    playGrassRustleSound();
+                    touchCounter++;
+                    
+                    // Жители появляются при активном касании
+                    if (Math.random() > 0.90) {
+                        spawnCreature(x, y);
+                    }
+                    
+                    // Кролик может выглянуть когда раздвигаешь траву
+                    maybeSpawnRabbitOnTouch(x, y);
+                    
+                    // Дополнительные жители каждые 10 движений
+                    if (touchCounter >= 10 && activePearls.length === 0) {
+                        spawnCreature(x, y);
+                        touchCounter = 0;
+                    }
+                }
+                
+                // Жемчужина появляется отдельно от жителей
+                if (touchMoveDistance > 150 && activePearls.length === 0 && touchCounter < 10) {
+                    createPearlAtTouch(x, y);
+                    touchMoveDistance = 0;
+                }
+            }
+            
+            lastTouchPos = { x, y };
+            touchPos = { x, y };
+            isTouching = true;
+        }
+
+        function handleTouchStart(e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+            
+            if (!audioContext) {
+                initAudio();
+            }
+            
+            lastTouchPos = { x, y };
+            touchPos = { x, y };
+            touchMoveDistance = 0;
+            touchStartTime = Date.now();
+            isTouching = true;
+        }
+
+        function handleTouchEnd() {
+            touchPos = null;
+            lastTouchPos = null;
+            touchMoveDistance = 0;
+            isTouching = false;
+        }
+
+        // Создание жителя травы
+        function spawnCreature(x, y, forceType = null) {
+            const types = [
+                { emoji: '🦋', class: 'butterfly', sound: playButterflySound },
+                { emoji: '✨', class: 'firefly', sound: playFireflySound },
+                { emoji: '🦗', class: 'grasshopper', sound: playGrasshopperSound }
+            ];
+            const type = forceType ? types.find(t => t.class === forceType) : types[Math.floor(Math.random() * types.length)];
+            
+            const creature = document.createElement('div');
+            creature.className = `creature ${type.class}`;
+            creature.textContent = type.emoji;
+            creature.style.left = x + 'px';
+            creature.style.top = y + 'px';
+            
+            // Рандомное направление движения с большей вариативностью
+            if (type.class === 'firefly') {
+                // Светлячки летят в разных направлениях более непредсказуемо
+                const dx = (Math.random() - 0.5) * 400; // больше разброс по X
+                const dy = -(Math.random() * 250 + 80); // разная высота подъёма
+                const duration = 3 + Math.random() * 3; // от 3 до 6 секунд
+                creature.style.setProperty('--dx', dx + 'px');
+                creature.style.setProperty('--dy', dy + 'px');
+                creature.style.setProperty('--duration', duration + 's');
+            } else if (type.class === 'grasshopper') {
+                // Кузнечики прыгают в разные стороны
+                const dx = (Math.random() - 0.5) * 300;
+                const dy = Math.random() * 80 + 100;
+                creature.style.setProperty('--dx', dx + 'px');
+                creature.style.setProperty('--dy', dy + 'px');
+            } else {
+                // Бабочки
+                const dx = (Math.random() - 0.5) * 250;
+                const dy = -(Math.random() * 180 + 80);
+                creature.style.setProperty('--dx', dx + 'px');
+                creature.style.setProperty('--dy', dy + 'px');
+            }
+            
+            document.body.appendChild(creature);
+            type.sound();
+            
+            // Удаляем после анимации
+            const duration = type.class === 'grasshopper' ? 1200 : (type.class === 'firefly' ? 6000 : 3000);
+            setTimeout(() => creature.remove(), duration);
+        }
+
+        // Появление кролика (части тела как будто сидит в траве)
+        function spawnRabbit() {
+            // Разные части кролика с соответствующими классами
+            const parts = [
+                { emoji: '👂', class: 'rabbit rabbit-ears', name: 'ears' },      // уши
+                { emoji: '👃', class: 'rabbit rabbit-nose', name: 'nose' },      // нос
+                { emoji: '🐰', class: 'rabbit', name: 'face' },                  // мордочка
+                { emoji: '○', class: 'rabbit rabbit-tail', name: 'tail' }       // хвостик (белый кружок)
+            ];
+            
+            const part = parts[Math.floor(Math.random() * parts.length)];
+            
+            const rabbit = document.createElement('div');
+            rabbit.className = `creature ${part.class}`;
+            
+            // Для хвоста используем белый пушистый круг
+            if (part.name === 'tail') {
+                rabbit.innerHTML = '<div style="width: 80px; height: 80px; background: radial-gradient(circle, #fff 0%, #f5f5f5 60%, rgba(245,245,245,0.8) 100%); border-radius: 50%; box-shadow: 0 2px 12px rgba(0,0,0,0.15), inset -2px -2px 6px rgba(0,0,0,0.1);"></div>';
+            } else {
+                rabbit.textContent = part.emoji;
+            }
+            
+            // Появляется снизу экрана случайно
+            const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+            
+            // Разные позиции для разных частей
+            const x = Math.random() * (vw - 200) + 100;
+            const y = vh - 100 - Math.random() * 50; // около нижнего края
+            
+            rabbit.style.left = x + 'px';
+            rabbit.style.top = y + 'px';
+            
+            document.body.appendChild(rabbit);
+            
+            // Звук кролика
+            if (audioContext && Math.random() > 0.4) {
+                playGrassRustleSound(); // шорох травы от кролика
+            }
+            
+            setTimeout(() => rabbit.remove(), 2500);
+        }
+
+        // Кузнечики прыгают изредка в покое
+        function startIdleCreatures() {
+            // Кузнечики появляются
+            setInterval(() => {
+                if (!isTouching && Math.random() > 0.6) {
+                    const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                    const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+                    const x = Math.random() * vw;
+                    const y = vh * 0.6 + Math.random() * vh * 0.4; // появляются внизу экрана
+                    spawnCreature(x, y, 'grasshopper');
+                }
+            }, 7000); // каждые 7 секунд
+
+            // Кролик появляется при покое - большой в траве
+            setInterval(() => {
+                if (!isTouching && Math.random() > 0.7) {
+                    spawnRabbit();
+                }
+            }, 10000); // каждые 10 секунд
+        }
+        
+        // Кролик может появиться при активном касании травы
+        function maybeSpawnRabbitOnTouch(x, y) {
+            // 5% шанс что раздвинешь траву и увидишь часть кролика
+            if (Math.random() > 0.95 && activePearls.length === 0) {
+                spawnRabbit();
+            }
+        }
+
+        function createPearlAtTouch(x, y) {
+            const pearl = document.createElement('div');
+            pearl.className = 'pearl';
+            
+            const offsetX = (Math.random() - 0.5) * 100;
+            const offsetY = (Math.random() - 0.5) * 50;
+            
+            pearl.style.left = (x + offsetX) + 'px';
+            pearl.style.top = (y + offsetY) + 'px';
+            
+            // Космический звук появления жемчужины
+            playPearlAppearSound();
+            
+            const availableWisdoms = wisdoms.filter((_, i) => !collected.includes(i));
+            const wisdomIndex = availableWisdoms.length > 0 
+                ? wisdoms.indexOf(availableWisdoms[Math.floor(Math.random() * availableWisdoms.length)])
+                : Math.floor(Math.random() * wisdoms.length);
+            
+            pearl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                showWisdom(wisdomIndex);
+                pearl.remove();
+                activePearls = activePearls.filter(p => p !== pearl);
+            });
+            
+            document.body.appendChild(pearl);
+            activePearls.push(pearl);
+            
+            setTimeout(() => {
+                if (activePearls.includes(pearl)) {
+                    pearl.style.transition = 'opacity 0.5s ease';
+                    pearl.style.opacity = '0';
+                    setTimeout(() => {
+                        pearl.remove();
+                        activePearls = activePearls.filter(p => p !== pearl);
+                    }, 500);
+                }
+            }, 10000);
+        }
+
+        canvas.addEventListener('touchstart', handleTouchStart);
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            handleTouch(e);
+        }, { passive: false });
+        canvas.addEventListener('touchend', handleTouchEnd);
+        
+        canvas.addEventListener('mousedown', handleTouchStart);
+        canvas.addEventListener('mousemove', (e) => {
+            if (e.buttons === 1) handleTouch(e);
+        });
+        canvas.addEventListener('mouseup', handleTouchEnd);
+        canvas.addEventListener('mouseleave', handleTouchEnd);
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initGrass();
+        });
+
+        function showWisdom(index) {
+            const content = document.getElementById('pearlContent');
+            content.classList.remove('evaporating');
+            
+            pearlText.textContent = wisdoms[index];
+            modal.classList.add('show');
+            
+            if (!collected.includes(index)) {
+                collected.push(index);
+                localStorage.setItem('grassPearls', JSON.stringify(collected));
+            }
+            
+            setTimeout(() => {
+                content.classList.add('evaporating');
+                setTimeout(() => {
+                    modal.classList.remove('show');
+                    content.classList.remove('evaporating');
+                }, 800);
+            }, 2500);
+        }
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+
+        modal.addEventListener('click', () => {
+            const content = document.getElementById('pearlContent');
+            content.classList.add('evaporating');
+            setTimeout(() => {
+                modal.classList.remove('show');
+                content.classList.remove('evaporating');
+            }, 800);
+        });
+
+        document.getElementById('pearlContent').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Инициализация
+        initGrass();
+        animate();
+    </script>
+</body>
+</html>
