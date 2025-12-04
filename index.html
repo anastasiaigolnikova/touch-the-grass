@@ -30,6 +30,48 @@
             background: linear-gradient(to bottom, #b8c8a6, #8a9b7a);
             z-index: -2;
         }
+        
+        /* Солнечные лучи раннего утра */
+        #sunRays {
+            position: fixed;
+            top: -50%;
+            right: -30%;
+            width: 120%;
+            height: 150%;
+            background: conic-gradient(
+                from 200deg at 100% 0%,
+                transparent 0deg,
+                rgba(255, 248, 220, 0.12) 5deg,
+                transparent 10deg,
+                transparent 15deg,
+                rgba(255, 245, 200, 0.1) 20deg,
+                transparent 25deg,
+                transparent 32deg,
+                rgba(255, 250, 230, 0.08) 37deg,
+                transparent 42deg,
+                transparent 50deg,
+                rgba(255, 248, 210, 0.1) 55deg,
+                transparent 60deg,
+                transparent 70deg,
+                rgba(255, 245, 200, 0.06) 75deg,
+                transparent 80deg,
+                transparent 360deg
+            );
+            z-index: -1;
+            pointer-events: none;
+            animation: sunRaysGlow 8s ease-in-out infinite;
+        }
+        
+        @keyframes sunRaysGlow {
+            0%, 100% {
+                opacity: 0.7;
+                transform: rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: rotate(2deg);
+            }
+        }
 
         #grassCanvas {
             position: fixed;
@@ -692,6 +734,9 @@
 <body>
     <!-- Зелёный фон - самый нижний слой -->
     <div id="greenBackground"></div>
+    
+    <!-- Солнечные лучи раннего утра -->
+    <div id="sunRays"></div>
     
     <canvas id="grassCanvas"></canvas>
     
