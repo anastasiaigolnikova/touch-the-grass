@@ -1285,10 +1285,14 @@
         
         function initFlowers() {
             flowers = [];
-            // Цветы — 6-10 на экран (заметно, но не слишком много)
-            const flowerCount = 6 + Math.floor(Math.random() * 5);
-            // Клевер — 15-22 на экран (больше, в просветах наверху)
-            const cloverCount = 15 + Math.floor(Math.random() * 8);
+            
+            // Проверяем мобильное устройство (маленький экран)
+            const isMobile = width < 768;
+            
+            // На мобильных увеличиваем количество и размер
+            const flowerCount = isMobile ? (10 + Math.floor(Math.random() * 6)) : (6 + Math.floor(Math.random() * 5));
+            const cloverCount = isMobile ? (25 + Math.floor(Math.random() * 10)) : (15 + Math.floor(Math.random() * 8));
+            const scaleMultiplier = isMobile ? 1.5 : 1; // Увеличиваем размер на мобильных
             
             // Цветы — по всему полю
             for (let i = 0; i < flowerCount; i++) {
@@ -1296,7 +1300,7 @@
                     type: 'flower',
                     x: Math.random() * width,
                     y: height * 0.35 + Math.random() * height * 0.55, // По полю
-                    scale: 0.18 + Math.random() * 0.12, // Крупнее (0.18-0.30)
+                    scale: (0.18 + Math.random() * 0.12) * scaleMultiplier, // Крупнее на мобильных
                     windPhase: Math.random() * Math.PI * 2,
                     bendAmount: 0
                 });
@@ -1307,21 +1311,21 @@
                 flowers.push({
                     type: 'clover',
                     x: Math.random() * width,
-                    y: height * 0.15 + Math.random() * height * 0.35, // Верхняя часть (15%-50%)
-                    scale: 0.18 + Math.random() * 0.15, // 0.18-0.33 (крупнее)
+                    y: height * 0.10 + Math.random() * height * 0.45, // Расширили зону (10%-55%)
+                    scale: (0.20 + Math.random() * 0.18) * scaleMultiplier, // 0.20-0.38 (крупнее на мобильных)
                     windPhase: Math.random() * Math.PI * 2,
                     bendAmount: 0
                 });
             }
             
-            // Одуванчики — 5-6 штук, покачиваются как трава
-            const dandelionCount = 5 + Math.floor(Math.random() * 2);
+            // Одуванчики — больше на мобильных
+            const dandelionCount = isMobile ? (8 + Math.floor(Math.random() * 4)) : (5 + Math.floor(Math.random() * 2));
             for (let i = 0; i < dandelionCount; i++) {
                 flowers.push({
                     type: 'dandelion',
                     x: width * 0.1 + Math.random() * width * 0.8, // Равномерно по ширине
                     y: height * 0.4 + Math.random() * height * 0.5, // Средняя и нижняя часть
-                    scale: 0.25 + Math.random() * 0.15, // 0.25-0.40
+                    scale: (0.25 + Math.random() * 0.15) * scaleMultiplier, // Крупнее на мобильных
                     windPhase: Math.random() * Math.PI * 2,
                     bendAmount: 0
                 });
@@ -2667,8 +2671,23 @@
             closeModal();
         });
 
+        // ВАЖНО: Останавливаем всплытие событий от кнопки аудио
+        // чтобы карточка не закрывалась при нажатии на "слушать звук Сатурна"
+        audioButton.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+        });
+        audioButton.addEventListener('touchend', (e) => {
+            e.stopPropagation();
+            // Эмулируем click для мобильных
+            audioButton.click();
+        });
+
         // Нажатие на КОНТЕНТ - останавливаем таймер и держим карточку
         document.getElementById('pearlContent').addEventListener('touchstart', (e) => {
+            // Не активируем закрытие если нажали на кнопку аудио
+            if (e.target === audioButton || audioButton.contains(e.target)) {
+                return;
+            }
             e.stopPropagation();
             modalTouchActive = true;
             clearTimeout(autoCloseTimer); // Останавливаем автозакрытие
@@ -2682,6 +2701,11 @@
 
         // Отпустили палец с КОНТЕНТА - закрываем
         document.getElementById('pearlContent').addEventListener('touchend', (e) => {
+            // Не закрываем если нажали на кнопку аудио
+            if (e.target === audioButton || audioButton.contains(e.target)) {
+                e.stopPropagation();
+                return;
+            }
             e.stopPropagation();
             if (modalTouchActive) {
                 closeModal();
