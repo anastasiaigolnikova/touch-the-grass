@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>🌿 трава</title>
+    <title>🌿 grass</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,7 @@
             position: relative;
         }
         
-        /* Зелёный фон - на самом нижнем слое */
+        /* Green background - on the bottom layer */
         #greenBackground {
             position: fixed;
             top: 0;
@@ -31,7 +31,7 @@
             z-index: -2;
         }
         
-        /* Солнечные лучи раннего утра */
+        /* Early morning sun rays */
         #sunRays {
             position: fixed;
             top: -50%;
@@ -82,14 +82,14 @@
             will-change: transform;
         }
         
-        /* Облака - ПОД травой, чтобы проглядывали сквозь */
+        /* Clouds - BELOW grass, visible through gaps */
         #cloudsContainer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 500px;
-            z-index: 0; /* ПОД травой */
+            z-index: 0; /* BELOW grass */
             pointer-events: none;
         }
         
@@ -100,7 +100,7 @@
             animation: cloudFloat linear infinite;
         }
         
-        /* 30 облаков ВЫШЕ — видны в просветах травы */
+        /* 30 clouds ABOVE — visible through grass gaps */
         .c1 { width: 600px; top: -200px; animation-duration: 280s; animation-delay: 0s; }
         .c2 { width: 700px; top: -180px; animation-duration: 320s; animation-delay: -20s; }
         .c3 { width: 550px; top: -220px; animation-duration: 260s; animation-delay: -40s; }
@@ -296,7 +296,7 @@
             display: none;
         }
 
-        /* Жители травы */
+        /* Grass creatures */
         .creature {
             position: fixed;
             font-size: 24px;
@@ -305,7 +305,7 @@
             user-select: none;
         }
         
-        /* Transition только для кролика (остальные существа используют opacity в анимациях) */
+        /* Transition only for rabbit (other creatures use opacity in animations) */
         .creature.rabbit {
             transition: opacity 0.3s ease;
         }
@@ -387,26 +387,26 @@
             animation: fireflyRise var(--duration) ease-in-out forwards, fireflyGlow 1.2s ease-in-out infinite;
         }
         
-        /* 4 разных формы звёздочек */
+        /* 4 different star shapes */
         .firefly-red {
             background-image: url('Background/Layer-2.png?v=2');
             width: 35px !important;
-            height: 65px !important; /* Вертикальная */
+            height: 65px !important; /* Vertical */
         }
         .firefly-cyan {
             background-image: url('Background/Layer-3.png?v=2');
             width: 50px !important;
-            height: 70px !important; /* Вертикальная */
+            height: 70px !important; /* Vertical */
         }
         .firefly-blue {
             background-image: url('Background/Layer-4.png?v=2');
             width: 45px !important;
-            height: 45px !important; /* Квадратная */
+            height: 45px !important; /* Square */
         }
         .firefly-small-blue {
             background-image: url('Background/Layer-5.png?v=2');
             width: 35px !important;
-            height: 35px !important; /* Маленькая квадратная */
+            height: 35px !important; /* Small square */
         }
 
         @keyframes fireflyRise {
@@ -442,7 +442,7 @@
 
         .grasshopper {
             width: 70px !important;
-            height: 55px !important; /* Горизонтальный */
+            height: 55px !important; /* Horizontal */
             background-image: url('Background/grasshopper-on-a-gray-background.png?v=2');
             background-size: contain;
             background-repeat: no-repeat;
@@ -475,16 +475,16 @@
                 transform: translate(0, -10px) scale(0.8);
                 opacity: 1;
             }
-            /* Сидит на листике */
+            /* Sitting on a leaf */
             40%, 60% {
                 transform: translate(10px, -15px) scale(0.85);
                 opacity: 1;
             }
-            /* Небольшое движение пока сидит */
+            /* Small movement while sitting */
             50% {
                 transform: translate(12px, -14px) scale(0.85) rotate(5deg);
             }
-            /* Уползает обратно */
+            /* Crawling back */
             75% {
                 transform: translate(-10px, -8px) scale(0.75);
                 opacity: 1;
@@ -521,53 +521,53 @@
 
         @keyframes grasshopperJump {
             0% {
-                /* На земле, готовится прыгнуть */
+                /* On the ground, preparing to jump */
                 transform: translate(0, 0) scale(calc(0.9 * var(--flip, 1)), 0.9) rotate(0deg);
                 opacity: 0;
             }
             5% {
-                /* Приседает перед прыжком */
+                /* Crouching before jump */
                 transform: translate(0, 5px) scale(calc(0.85 * var(--flip, 1)), 0.85) rotate(calc(-5deg * var(--flip, 1)));
                 opacity: 1;
             }
             15% {
-                /* Резко отталкивается! */
+                /* Pushing off! */
                 transform: translate(calc(var(--dx) * 0.15), -30px) scale(calc(1 * var(--flip, 1)), 1) rotate(calc(15deg * var(--flip, 1)));
                 opacity: 1;
             }
             30% {
-                /* Летит вверх по дуге */
+                /* Flying up in an arc */
                 transform: translate(calc(var(--dx) * 0.35), -80px) scale(calc(1.05 * var(--flip, 1)), 1.05) rotate(calc(25deg * var(--flip, 1)));
                 opacity: 1;
             }
             50% {
-                /* ПИК прыжка - максимальная высота! */
+                /* PEAK of jump - maximum height! */
                 transform: translate(calc(var(--dx) * 0.55), -100px) scale(calc(1.1 * var(--flip, 1)), 1.1) rotate(calc(30deg * var(--flip, 1)));
                 opacity: 1;
             }
             65% {
-                /* Падает вниз по дуге */
+                /* Falling down in an arc */
                 transform: translate(calc(var(--dx) * 0.7), -70px) scale(calc(1.05 * var(--flip, 1)), 1.05) rotate(calc(25deg * var(--flip, 1)));
                 opacity: 1;
             }
             80% {
-                /* Снижается к земле */
+                /* Descending to ground */
                 transform: translate(calc(var(--dx) * 0.85), -20px) scale(calc(1 * var(--flip, 1)), 1) rotate(calc(15deg * var(--flip, 1)));
                 opacity: 1;
             }
             90% {
-                /* Почти приземлился */
+                /* Almost landed */
                 transform: translate(calc(var(--dx) * 0.95), 0px) scale(calc(0.95 * var(--flip, 1)), 0.95) rotate(calc(5deg * var(--flip, 1)));
                 opacity: 0.8;
             }
             100% {
-                /* Приземлился и исчезает в траве */
+                /* Landed and disappearing into grass */
                 transform: translate(var(--dx), 10px) scale(calc(0.7 * var(--flip, 1)), 0.7) rotate(0deg);
                 opacity: 0;
             }
         }
 
-        /* Кролик - большой, подглядывает снизу */
+        /* Rabbit - large, peeking from below */
         .rabbit {
             width: 640px !important;
             height: 640px !important;
@@ -582,14 +582,14 @@
 
         @keyframes rabbitPeek {
             0% {
-                transform: translateY(0px) rotate(0deg); /* начинает внизу экрана */
+                transform: translateY(0px) rotate(0deg); /* starts at bottom of screen */
                 opacity: 0;
             }
             15% {
                 opacity: 1;
                 transform: translateY(calc(-0.3 * var(--rabbit-peek-height, 120px))) rotate(0deg);
             }
-            /* Дёргание уха - небольшие повороты */
+            /* Ear twitch - small rotations */
             25% {
                 transform: translateY(calc(-0.8 * var(--rabbit-peek-height, 120px))) rotate(1.5deg);
             }
@@ -606,7 +606,7 @@
                 transform: translateY(calc(-1 * var(--rabbit-peek-height, 120px))) rotate(0deg);
                 opacity: 1;
             }
-            /* Ещё одно дёргание перед уходом */
+            /* One more twitch before leaving */
             65% {
                 transform: translateY(calc(-1 * var(--rabbit-peek-height, 120px))) rotate(1deg);
             }
@@ -617,12 +617,12 @@
                 transform: translateY(calc(-0.8 * var(--rabbit-peek-height, 120px))) rotate(0deg);
             }
             100% {
-                transform: translateY(0px) rotate(0deg); /* опускается обратно */
+                transform: translateY(0px) rotate(0deg); /* goes back down */
                 opacity: 0;
             }
         }
 
-        /* Индикатор фокуса / таймер */
+        /* Focus indicator / timer */
         #focusTimer {
             position: fixed;
             bottom: 30px;
@@ -665,7 +665,7 @@
             stroke-width: 4;
             stroke-linecap: round;
             stroke-dasharray: 283; /* 2 * PI * 45 */
-            stroke-dashoffset: 283; /* Начинаем с пустого круга */
+            stroke-dashoffset: 283; /* Start with empty circle */
             transition: stroke-dashoffset 1s linear;
         }
         
@@ -695,7 +695,7 @@
                 margin: 10px;
             }
             
-            /* Исправление изображений в карточках на мобильных */
+            /* Fix images in cards on mobile */
             #pearlImage {
                 width: calc(100% + 40px) !important;
                 height: 160px !important;
@@ -762,15 +762,15 @@
     </style>
 </head>
 <body>
-    <!-- Зелёный фон - самый нижний слой -->
+    <!-- Green background - bottom layer -->
     <div id="greenBackground"></div>
     
-    <!-- Солнечные лучи раннего утра -->
+    <!-- Early morning sun rays -->
     <div id="sunRays"></div>
     
     <canvas id="grassCanvas"></canvas>
     
-    <!-- Плывущие облака (много!) -->
+    <!-- Floating clouds (lots!) -->
     <div id="cloudsContainer">
         <img src="Background/cloud1.png" class="cloud c1" alt="">
         <img src="Background/cloud2.png" class="cloud c2" alt="">
@@ -804,7 +804,7 @@
         <img src="Background/cloud2.png" class="cloud c30" alt="">
     </div>
     
-    <!-- Индикатор фокуса / таймер -->
+    <!-- Focus indicator / timer -->
     <div id="focusTimer">
         <div class="timer-circle">
             <svg viewBox="0 0 100 100">
@@ -812,10 +812,10 @@
                 <circle class="timer-progress" cx="50" cy="50" r="45"/>
             </svg>
         </div>
-        <div class="timer-label">отдохни</div>
+        <div class="timer-label">rest</div>
     </div>
     
-    <!-- Фон Сатурна (показывается когда открыта карточка про Сатурн) -->
+    <!-- Saturn background (shown when Saturn card is open) -->
     <div id="saturnBackground" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('Background/hubble-saturn-visible-light.jpg'); background-size: cover; background-position: center; z-index: 1; cursor: pointer;"></div>
 
     <div id="pearlModal">
@@ -843,18 +843,18 @@
         const closeBtn = document.getElementById('closeModal');
         const saturnBackground = document.getElementById('saturnBackground');
         
-        let currentAudio = null; // Для хранения текущего аудио
-        let alienElement = null; // Для хранения инопланетянина
-        let alienAnimationId = null; // Для requestAnimationFrame
-        let alienResizeHandler = null; // Для resize listener
-        let isSpaceMode = false; // Космический режим (Сатурн)
+        let currentAudio = null; // For storing current audio
+        let alienElement = null; // For storing alien element
+        let alienAnimationId = null; // For requestAnimationFrame
+        let alienResizeHandler = null; // For resize listener
+        let isSpaceMode = false; // Space mode (Saturn)
 
-        // Поддержка Retina/высокого DPI для чёткой травы на мобильных
+        // Retina/high DPI support for sharp grass on mobile
         const dpr = window.devicePixelRatio || 1;
         let width = window.innerWidth;
         let height = window.innerHeight;
         
-        // Устанавливаем размер canvas с учётом DPI
+        // Set canvas size with DPI in mind
         canvas.width = width * dpr;
         canvas.height = height * dpr;
         canvas.style.width = width + 'px';
@@ -866,93 +866,93 @@
         let windTime = 0;
 
         let wisdoms = [
-            "попей воды",
-            "расслабь челюсть",
-            "Сделай глубокий вдох и выдох",
-            "Убери телефон посмотри вдаль 20 сек",
-            "потянись как кошка",
-            "встань на минуту",
-            "Пройдись 10 минут на свежем воздухе",
-            "Подумай о своей мечте 2 минуты, не отвлекайся",
-            "найди 3 приятных мелочи вокруг",
-            "скажи мысленно себе «спасибо»",
-            "всё норм: ты живой",
-            "Устал- отдохни",
-            "представь что твоё дыхание — это волны",
-            "будь к себе мягче",
-            "представь что ты кот на солнце",
-            "Съешь что то зеленое например яблоко или авокадо",
-            "постой у окна 2 минуты",
-            "представь что ты звезда: просто светишь",
-            "расслабь живот",
-            "посмотри на зелёное",
-            "послушай своё сердцебиение",
-            "Подумай о том что ты чувствуешь сейчас?",
-            "выбери доброту",
-            "не геройствуй, просто начни",
-            "микропобеда тоже победа",
-            "помассируй мочки ушей",
-            "побудь деревом: укоренён и спокоен",
-            "если бы ты был планетой, то какой?",
-            "пошевели пальцами ног",
-            "сделай круговые движения плечами",
-            "отправь тревогу плыть на плоту",
-            "ты — цветок, просто существуешь и качаешься на ветру",
-            "закрой глаза на 30 секунд",
-            "посмотри на себя с высоты облаков",
-            "Подумай что у тебя получилось сегодня?",
-            "отправь мысленно свой стресс на другую галактику",
-            "ты молодец, даже если не чувствуешь этого",
-            "ты уже справляешься",
-            "ошибаться — нормально",
-            "побудь травой: качайся и хрусти",
-            "представь что ты сидишь в огромной мягкой лапе доброго существа",
-            "усталость — это не слабость",
-            "отдых — это не лень это необходимость",
-            "плохие дни случаются у всех",
-            "подумай о ком-то хорошо",
-            "представь что ты облако",
-            "пусть твои мысли будут облаками: проплывают мягко",
-            "мысленно отправь все проблемы в космос",
-            "представь что твои мысли — это пузыри и они улетают",
-            "представь что ты тёплая булочка",
-            "побудь листом на ветру"
+            "drink some water",
+            "relax your jaw",
+            "take a deep breath in and out",
+            "put your phone down, look into the distance for 20 sec",
+            "stretch like a cat",
+            "stand up for a minute",
+            "take a 10-minute walk outside",
+            "think about your dream for 2 minutes, stay focused",
+            "find 3 pleasant little things around you",
+            "mentally say 'thank you' to yourself",
+            "it's all good: you're alive",
+            "tired? take a rest",
+            "imagine your breath as waves",
+            "be gentle with yourself",
+            "imagine you're a cat in the sun",
+            "eat something green, like an apple or avocado",
+            "stand by the window for 2 minutes",
+            "imagine you're a star: just shining",
+            "relax your belly",
+            "look at something green",
+            "listen to your heartbeat",
+            "what are you feeling right now?",
+            "choose kindness",
+            "don't overthink it, just start",
+            "a small win is still a win",
+            "massage your earlobes",
+            "be a tree: grounded and calm",
+            "if you were a planet, which one would you be?",
+            "wiggle your toes",
+            "roll your shoulders in circles",
+            "let your anxiety float away on a raft",
+            "you're a flower, just existing and swaying in the wind",
+            "close your eyes for 30 seconds",
+            "look at yourself from above the clouds",
+            "what did you accomplish today?",
+            "mentally send your stress to another galaxy",
+            "you're doing great, even if you don't feel it",
+            "you're already coping",
+            "making mistakes is normal",
+            "be the grass: sway and rustle",
+            "imagine sitting in the soft palm of a kind creature",
+            "tiredness is not weakness",
+            "rest is not laziness, it's necessary",
+            "bad days happen to everyone",
+            "think kindly about someone",
+            "imagine you're a cloud",
+            "let your thoughts be clouds: drifting gently",
+            "mentally send all your problems into space",
+            "imagine your thoughts are bubbles floating away",
+            "imagine you're a warm little bun",
+            "be a leaf in the wind"
         ];
 
-        // Визуальные факты с картинками
+        // Visual facts with images
         let visualFacts = [
             {
-                fact: "Выдры держатся за лапки во сне, чтобы не уплыть друг от друга",
+                fact: "Sea otters hold hands while sleeping so they don't drift apart",
                 caption: "",
                 imageUrl: "Background/two-sea-otters-sleeping-on-their-backs--floating-t.png"
             },
             {
-                fact: "В Японии существует концепция «лесных ванн» (shinrin-yoku) — терапия прогулками в лесу",
-                caption: "20 минут в лесу снижают кортизол",
+                fact: "In Japan, there's a concept called 'forest bathing' (shinrin-yoku) — therapy through forest walks",
+                caption: "20 minutes in the forest reduces cortisol",
                 imageUrl: "Background/wide_top-down_shot_orthographic_feel_no_foreshortening_a_giant_man_in_a_grey_tracksuit_lies_flat_on_lwmfulmv6av7wwacln02_0.png"
             },
             {
-                fact: "Звук Сатурна записали учёные: он похож на инопланетную музыку",
-                caption: "у планет есть свои саундтреки",
+                fact: "Scientists recorded the sound of Saturn: it sounds like alien music",
+                caption: "planets have their own soundtracks",
                 imageUrl: "Background/hubble-saturn-visible-light.jpg",
                 imageCredit: "Image credit: NASA",
                 audioUrl: "saturn/123163main_casskr1112203.mp3",
-                audioButtonText: "🔊 слушать звук Сатурна"
+                audioButtonText: "🔊 listen to Saturn's sound"
             },
             {
-                fact: "Твоё тело состоит из звёздной пыли",
-                caption: "буквально. все атомы тяжелее водорода родились в звёздах",
+                fact: "Your body is made of stardust",
+                caption: "literally. all atoms heavier than hydrogen were born in stars",
                 imageUrl: "Background/ancient_stardust.png",
                 imageCredit: "Image credit: NASA"
             },
             {
-                fact: "20 минут на природе снижают уровень стресса на 20%",
-                caption: "природа — это бесплатный терапевт",
+                fact: "20 minutes in nature reduces stress levels by 20%",
+                caption: "nature is a free therapist",
                 imageUrl: "Background/Screenshot 2025-11-14 at 19.02.06.png"
             },
             {
-                fact: "Японское искусство кинцуги — это ремонт керамики золотом",
-                caption: "иногда трещины делают вещь ценнее",
+                fact: "The Japanese art of kintsugi is repairing ceramics with gold",
+                caption: "sometimes cracks make things more valuable",
                 imageUrls: [
                     "Background/beautiful_adult_woman_natural_human_skin_eyes_closed_serene_expression_waist-up_no_statue_cutoff_no_g8oy0npkeh95sn1dim0b_1.png",
                     "Background/full-length_seated_beautiful_woman_adult_on_simple_chair_relaxed_posture_hands_on_lap_continuous_bo_shul4hff6l0lnz781q69_2.png"
@@ -964,62 +964,62 @@
         let touchMoveDistance = 0;
         let lastTouchPos = null;
         let touchStartTime = 0;
-        let touchCounter = 0; // Счётчик движений для появления жителей
+        let touchCounter = 0; // Movement counter for creature appearance
         
-        // Отслеживание показанных карточек (чтобы не повторялись)
-        let shownWisdoms = []; // Индексы показанных текстовых мудростей
-        let shownVisualFacts = []; // Индексы показанных визуальных фактов
-        let cardsShownCount = 0; // Счётчик показанных карточек (для кролика)
+        // Track shown cards (to avoid repetition)
+        let shownWisdoms = []; // Indices of shown text wisdoms
+        let shownVisualFacts = []; // Indices of shown visual facts
+        let cardsShownCount = 0; // Counter of shown cards (for rabbit)
         
-        // === ДВУХСЛОЙНАЯ ЗВУКОВАЯ СИСТЕМА ===
-        // Слой 1: Web Audio API — синтезированные звуки (космические)
+        // === TWO-LAYER SOUND SYSTEM ===
+        // Layer 1: Web Audio API — synthesized sounds (cosmic)
         let audioContext;
         let windSound;
         let isTouching = false;
 
-        // Слой 2: HTML5 Audio — реальные записи природы (фоновый ambient)
+        // Layer 2: HTML5 Audio — real nature recordings (background ambient)
         let ambientAudio = null;
         let audioInitialized = false;
-        let creaturesStarted = false; // Отдельный флаг для существ
+        let creaturesStarted = false; // Separate flag for creatures
 
         const AMBIENT_SOUNDS = [
             "https://assets.mixkit.co/active_storage/sfx/2458/2458.wav", // birds + wind
             "https://assets.mixkit.co/active_storage/sfx/513/513.wav"     // nature ambience
         ];
 
-        // Инициализация Audio Context (синтезированные звуки)
+        // Initialize Audio Context (synthesized sounds)
         function initAudio() {
             if (audioInitialized) return;
             audioInitialized = true;
 
-            // Web Audio API для синтезированных звуков
+            // Web Audio API for synthesized sounds
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 createWindSound();
                 createBirdSounds();
             }
             
-            // Запускаем существ отдельно (даже если аудио заблокировано)
+            // Start creatures separately (even if audio is blocked)
             if (!creaturesStarted) {
                 creaturesStarted = true;
                 startIdleCreatures();
             }
 
-            // HTML5 Audio для фоновой атмосферы с утками
+            // HTML5 Audio for background atmosphere with ducks
             if (!ambientAudio) {
                 ambientAudio = new Audio(AMBIENT_SOUNDS[0]);
                 ambientAudio.loop = true;
-                ambientAudio.volume = 0.20; // громче
+                ambientAudio.volume = 0.20; // louder
                 ambientAudio.crossOrigin = "anonymous";
                 
-                // Пробуем запустить сразу
+                // Try to start immediately
                 const playPromise = ambientAudio.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
-                        console.log('🦆 Утки играют!');
+                        console.log('🦆 Ducks playing!');
                     }).catch(error => {
-                        console.log('⚠️ Утки заблокированы браузером:', error.name);
-                        // Пробуем ещё раз через секунду
+                        console.log('⚠️ Ducks blocked by browser:', error.name);
+                        // Try again after one second
                         setTimeout(() => {
                             ambientAudio.play().catch(() => {});
                         }, 1000);
@@ -1028,8 +1028,8 @@
             }
         }
 
-        // Создаём фоновый синтезированный звук ветра с волнами
-        let windGainNode; // сохраняем ссылку для анимации
+        // Create background synthesized wind sound with waves
+        let windGainNode; // save reference for animation
         
         function createWindSound() {
             const bufferSize = audioContext.sampleRate * 2;
@@ -1057,15 +1057,15 @@
             
             windSound.start(0);
             
-            // Волны ветра - то дует, то затихает
+            // Wind waves - blowing and calming
             function windWave() {
                 if (!windGainNode) return;
-                // Не играем волны ветра в космическом режиме
+                // Don't play wind waves in space mode
                 if (isSpaceMode) {
-                    setTimeout(windWave, 1000); // Проверяем через секунду
+                    setTimeout(windWave, 1000); // Check again after one second
                     return;
                 }
-                const duration = 5 + Math.random() * 3; // 5-8 сек
+                const duration = 5 + Math.random() * 3; // 5-8 sec
                 const target = 0.06 + Math.random() * 0.10; // 0.06-0.16
                 const now = audioContext.currentTime;
                 windGainNode.gain.linearRampToValueAtTime(target, now + duration / 2);
@@ -1075,14 +1075,14 @@
             windWave();
         }
 
-        // Создаём синтезированные звуки птиц
+        // Create synthesized bird sounds
         function createBirdSounds() {
-            // Первая птичка сразу!
+            // First bird immediately!
             setTimeout(() => {
                 if (audioContext) playBirdChirp();
             }, 1000);
             
-            // Потом регулярно каждые 5 секунд
+            // Then regularly every 5 seconds
             setInterval(() => {
                 if (audioContext) {
                     playBirdChirp();
@@ -1090,10 +1090,10 @@
             }, 5000);
         }
 
-        // Убрали монотонные сверчки - вместо них будут случайные кузнечики
+        // Removed monotonous crickets - replaced with random grasshoppers
 
         function playBirdChirp() {
-            // Не играем птиц во время космического сюжета
+            // Don't play birds during space sequence
             if (isSpaceMode) return;
             
             const oscillator = audioContext.createOscillator();
@@ -1103,7 +1103,7 @@
             oscillator.frequency.value = 2000 + Math.random() * 1000;
             
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.01); // громче
+            gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.01); // louder
             gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.15);
             
             oscillator.connect(gainNode);
@@ -1114,7 +1114,7 @@
         }
 
 
-        // Магический космический звук при появлении жемчужины
+        // Magical cosmic sound when pearl appears
         function playPearlAppearSound() {
             if (!audioContext) return;
             
@@ -1144,9 +1144,9 @@
             oscillator2.stop(audioContext.currentTime + 0.3);
         }
 
-        // Диджитальный звук травы при касании
+        // Digital grass sound on touch
         function playGrassRustleSound() {
-            if (!audioContext || isSpaceMode) return; // Не играем в космосе
+            if (!audioContext || isSpaceMode) return; // Don't play in space
             
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
@@ -1169,9 +1169,9 @@
             oscillator.stop(audioContext.currentTime + 0.2);
         }
 
-        // Звук бабочки
+        // Butterfly sound
         function playButterflySound() {
-            if (!audioContext || isSpaceMode) return; // Не играем в космосе
+            if (!audioContext || isSpaceMode) return; // Don't play in space
             const osc = audioContext.createOscillator();
             const gain = audioContext.createGain();
             osc.type = 'sine';
@@ -1186,9 +1186,9 @@
             osc.stop(audioContext.currentTime + 0.15);
         }
 
-        // Звук светлячка
+        // Firefly sound
         function playFireflySound() {
-            if (!audioContext || isSpaceMode) return; // Не играем в космосе
+            if (!audioContext || isSpaceMode) return; // Don't play in space
             const osc = audioContext.createOscillator();
             const gain = audioContext.createGain();
             osc.type = 'sine';
@@ -1202,9 +1202,9 @@
             osc.stop(audioContext.currentTime + 0.3);
         }
 
-        // Звук кузнечика
+        // Grasshopper sound
         function playGrasshopperSound() {
-            if (!audioContext || isSpaceMode) return; // Не играем в космосе
+            if (!audioContext || isSpaceMode) return; // Don't play in space
             const osc = audioContext.createOscillator();
             const gain = audioContext.createGain();
             osc.type = 'square';
@@ -1218,31 +1218,31 @@
             osc.stop(audioContext.currentTime + 0.08);
         }
 
-        // === PNG ТРАВИНКИ ===
-        // Загружаем 8 изображений травы
+        // === PNG GRASS BLADES ===
+        // Load 8 grass images
         const grassImages = [];
         let grassImagesLoaded = false;
         
-        // === СИСТЕМА ПОРЫВОВ ВЕТРА ===
-        let windGust = 0;           // Текущая сила порыва (0 = нет порыва)
-        let windGustTarget = 0;     // Целевая сила порыва
-        let windGustDirection = 1;  // Направление порыва (1 = вправо, -1 = влево)
-        let windGustX = 0;          // Позиция "волны" ветра по X
+        // === WIND GUST SYSTEM ===
+        let windGust = 0;           // Current gust strength (0 = no gust)
+        let windGustTarget = 0;     // Target gust strength
+        let windGustDirection = 1;  // Gust direction (1 = right, -1 = left)
+        let windGustX = 0;          // Wind "wave" position on X
         
-        // Порывы ветра ОТКЛЮЧЕНЫ - только лёгкое покачивание
+        // Wind gusts DISABLED - only gentle swaying
         function startWindGusts() {
-            // Отключено
+            // Disabled
         }
         
         function updateWindGust() {
-            // Отключено - без порывов ветра
+            // Disabled - no wind gusts
             windGust = 0;
             windGustTarget = 0;
         }
         
         startWindGusts();
         
-        // === ЦВЕТЫ, КЛЕВЕР И ОДУВАНЧИКИ ===
+        // === FLOWERS, CLOVER AND DANDELIONS ===
         const flowerImage = new Image();
         const cloverImage = new Image();
         const dandelionImage = new Image();
@@ -1258,15 +1258,15 @@
         }
         
         flowerImage.onload = () => {
-            console.log('🌸 Цветок загружен!');
+            console.log('🌸 Flower loaded!');
             onFlowerImageLoad();
         };
         cloverImage.onload = () => {
-            console.log('🍀 Клевер загружен!');
+            console.log('🍀 Clover loaded!');
             onFlowerImageLoad();
         };
         dandelionImage.onload = () => {
-            console.log('🌼 Одуванчик загружен!');
+            console.log('🌼 Dandelion loaded!');
             onFlowerImageLoad();
         };
         
@@ -1274,7 +1274,7 @@
         cloverImage.src = 'Background/a_single_clover_plant_with_three_or_four_heart-shaped_leaves_slight_top-down_angle_so_all_leaves_ar_qgcin7cizj3oiqwvugwx_1.png';
         dandelionImage.src = 'Background/a_single_dandelion_flower_on_a_straight_thin_stem_side_view_fluffy_yellow_petals_simplified_into_cl_rtegyivy8a619uxci8w7_0 (1).png';
         
-        let flowers = []; // Массив цветов, клевера и одуванчиков
+        let flowers = []; // Array of flowers, clover and dandelions
         
         function checkFlowersLoaded() {
             if (flowerImage.complete && cloverImage.complete && dandelionImage.complete) {
@@ -1286,61 +1286,61 @@
         function initFlowers() {
             flowers = [];
             
-            // Проверяем мобильное устройство (маленький экран)
+            // Check for mobile device (small screen)
             const isMobile = width < 768;
             
-            // На мобильных увеличиваем количество и размер
+            // On mobile increase count and size
             const flowerCount = isMobile ? (10 + Math.floor(Math.random() * 6)) : (6 + Math.floor(Math.random() * 5));
             const cloverCount = isMobile ? (25 + Math.floor(Math.random() * 10)) : (15 + Math.floor(Math.random() * 8));
-            const scaleMultiplier = isMobile ? 1.5 : 1; // Увеличиваем размер на мобильных
+            const scaleMultiplier = isMobile ? 1.5 : 1; // Increase size on mobile
             
-            // Цветы — по всему полю
+            // Flowers — across the field
             for (let i = 0; i < flowerCount; i++) {
                 flowers.push({
                     type: 'flower',
                     x: Math.random() * width,
-                    y: height * 0.35 + Math.random() * height * 0.55, // По полю
-                    scale: (0.18 + Math.random() * 0.12) * scaleMultiplier, // Крупнее на мобильных
+                    y: height * 0.35 + Math.random() * height * 0.55, // Across the field
+                    scale: (0.18 + Math.random() * 0.12) * scaleMultiplier, // Larger on mobile
                     windPhase: Math.random() * Math.PI * 2,
                     bendAmount: 0
                 });
             }
             
-            // Клевер — НАВЕРХУ страницы, где видны просветы
+            // Clover — AT THE TOP of the page, where gaps are visible
             for (let i = 0; i < cloverCount; i++) {
                 flowers.push({
                     type: 'clover',
                     x: Math.random() * width,
-                    y: height * 0.10 + Math.random() * height * 0.45, // Расширили зону (10%-55%)
-                    scale: (0.20 + Math.random() * 0.18) * scaleMultiplier, // 0.20-0.38 (крупнее на мобильных)
+                    y: height * 0.10 + Math.random() * height * 0.45, // Expanded zone (10%-55%)
+                    scale: (0.20 + Math.random() * 0.18) * scaleMultiplier, // 0.20-0.38 (larger on mobile)
                     windPhase: Math.random() * Math.PI * 2,
                     bendAmount: 0
                 });
             }
             
-            // Одуванчики — больше на мобильных
+            // Dandelions — more on mobile
             const dandelionCount = isMobile ? (8 + Math.floor(Math.random() * 4)) : (5 + Math.floor(Math.random() * 2));
             for (let i = 0; i < dandelionCount; i++) {
                 flowers.push({
                     type: 'dandelion',
-                    x: width * 0.1 + Math.random() * width * 0.8, // Равномерно по ширине
-                    y: height * 0.4 + Math.random() * height * 0.5, // Средняя и нижняя часть
-                    scale: (0.25 + Math.random() * 0.15) * scaleMultiplier, // Крупнее на мобильных
+                    x: width * 0.1 + Math.random() * width * 0.8, // Evenly across width
+                    y: height * 0.4 + Math.random() * height * 0.5, // Middle and bottom part
+                    scale: (0.25 + Math.random() * 0.15) * scaleMultiplier, // Larger on mobile
                     windPhase: Math.random() * Math.PI * 2,
                     bendAmount: 0
                 });
             }
             
-            // Сортируем по Y для правильного наложения
+            // Sort by Y for correct layering
             flowers.sort((a, b) => a.y - b.y);
-            console.log(`🌸 Создано ${flowerCount} цветков, ${cloverCount} клеверов и ${dandelionCount} одуванчиков`);
+            console.log(`🌸 Created ${flowerCount} flowers, ${cloverCount} clovers and ${dandelionCount} dandelions`);
         }
         
         function updateFlowers() {
             if (!flowersLoaded) return;
             
             flowers.forEach(f => {
-                // Покачивание как у травы
+                // Swaying like grass
                 const baseWind = Math.sin(windTime * 0.2 + f.windPhase) * 0.02;
                 let gustForce = 0;
                 const distFromGust = Math.abs(f.x - windGustX);
@@ -1370,45 +1370,45 @@
             ctx.restore();
         }
         
-        // === ПЛЫВУЩИЕ ОБЛАКА (задний план) ===
+        // === FLOATING CLOUDS (background) ===
         const cloudImages = [new Image(), new Image()];
         let cloudsLoaded = 0;
         let clouds = [];
         
         cloudImages[0].onload = () => { 
             cloudsLoaded++; 
-            console.log('☁️ Облако 1 загружено');
+            console.log('☁️ Cloud 1 loaded');
             if (cloudsLoaded === 2) initClouds(); 
         };
         cloudImages[1].onload = () => { 
             cloudsLoaded++; 
-            console.log('☁️ Облако 2 загружено');
+            console.log('☁️ Cloud 2 loaded');
             if (cloudsLoaded === 2) initClouds(); 
         };
-        cloudImages[0].onerror = () => console.error('❌ Ошибка загрузки облака 1');
-        cloudImages[1].onerror = () => console.error('❌ Ошибка загрузки облака 2');
+        cloudImages[0].onerror = () => console.error('❌ Error loading cloud 1');
+        cloudImages[1].onerror = () => console.error('❌ Error loading cloud 2');
         
         cloudImages[0].src = 'Background/cloud1.png';
         cloudImages[1].src = 'Background/cloud2.png';
         
         function initClouds() {
             clouds = [];
-            // Создаём 2-3 ОЧЕНЬ БОЛЬШИХ облака (как на схеме)
+            // Create 2-3 VERY LARGE clouds (as in the design)
             const numClouds = 2 + Math.floor(Math.random() * 2);
             for (let i = 0; i < numClouds; i++) {
                 clouds.push({
-                    x: -200 + i * (width / 2) + Math.random() * 300, // Распределяем
-                    y: -100 + Math.random() * 150, // От -100 до +50 (частично за верхом)
+                    x: -200 + i * (width / 2) + Math.random() * 300, // Distribute
+                    y: -100 + Math.random() * 150, // From -100 to +50 (partially above top)
                     imageIndex: Math.floor(Math.random() * 2),
-                    scale: 2.5 + Math.random() * 1.5, // 2.5-4.0 (ОГРОМНЫЕ как на схеме!)
-                    speed: 0.05 + Math.random() * 0.05, // Очень медленно
-                    alpha: 0.95 // Хорошо видны
+                    scale: 2.5 + Math.random() * 1.5, // 2.5-4.0 (HUGE as in design!)
+                    speed: 0.05 + Math.random() * 0.05, // Very slow
+                    alpha: 0.95 // Well visible
                 });
             }
-            console.log(`☁️ Создано ${numClouds} ОГРОМНЫХ облаков`, clouds);
+            console.log(`☁️ Created ${numClouds} HUGE clouds`, clouds);
         }
         
-        // Инициализируем облака сразу (на случай если изображения уже в кэше)
+        // Initialize clouds immediately (in case images are already cached)
         setTimeout(() => {
             if (clouds.length === 0 && cloudsLoaded === 2) {
                 initClouds();
@@ -1422,13 +1422,13 @@
                 const cloud = clouds[i];
                 cloud.x += cloud.speed;
                 
-                // Если облако ушло за правый край — возвращаем слева
+                // If cloud went past right edge — return from left
                 const img = cloudImages[cloud.imageIndex];
                 if (!img || !img.complete) continue;
                 const w = img.width * cloud.scale;
                 if (cloud.x > width + w / 2) {
                     cloud.x = -w * 1.2;
-                    cloud.y = -100 + Math.random() * 150; // Как при инициализации
+                    cloud.y = -100 + Math.random() * 150; // Same as initialization
                 }
             }
         }
@@ -1453,9 +1453,9 @@
             }
         }
         
-        // Лог для отладки облаков
+        // Cloud debug log
         setTimeout(() => {
-            console.log('☁️ Статус облаков:', {
+            console.log('☁️ Cloud status:', {
                 cloudsLoaded,
                 cloudsCount: clouds.length,
                 img0: cloudImages[0].complete ? 'OK' : 'FAIL',
@@ -1464,18 +1464,18 @@
             });
         }, 2000);
         
-        // === ЛЕТАЮЩАЯ ПТИЧКА (3 кадра анимации) ===
+        // === FLYING BIRD (3 animation frames) ===
         const birdImages = [new Image(), new Image(), new Image()];
         let birdImagesLoaded = 0;
         let birdLoaded = false;
-        let bird = null; // Текущая птичка (или null если не летит)
+        let bird = null; // Current bird (or null if not flying)
         
         birdImages.forEach((img, i) => {
             img.onload = () => {
                 birdImagesLoaded++;
                 if (birdImagesLoaded === 3) {
                     birdLoaded = true;
-                    console.log('🐦 Все 3 кадра птички загружены!');
+                    console.log('🐦 All 3 bird frames loaded!');
                     startBirdTimer();
                 }
             };
@@ -1483,55 +1483,55 @@
         });
         
         function startBirdTimer() {
-            // Воробей взлетает — раз в 20-30 секунд
+            // Sparrow takes off — every 20-30 seconds
             setInterval(() => {
-                // Не спавним в космическом режиме
+                // Don't spawn in space mode
                 if (isSpaceMode) return;
                 
-                if (!bird && Math.random() > 0.4) { // 60% шанс
+                if (!bird && Math.random() > 0.4) { // 60% chance
                     spawnBird();
                 }
-            }, 20000); // Проверка каждые 20 секунд
+            }, 20000); // Check every 20 seconds
             
-            // Первая птичка через 5-10 секунд после загрузки
+            // First bird 5-10 seconds after loading
             setTimeout(() => {
                 if (!bird && !isSpaceMode) spawnBird();
             }, 5000 + Math.random() * 5000);
         }
         
         function spawnBird() {
-            // Воробей взлетает ВВЕРХ из травы
+            // Sparrow takes off UP from grass
             bird = {
-                x: width * 0.2 + Math.random() * width * 0.6, // Случайная позиция по X
-                y: height * 0.85, // Начинает снизу, из травы
-                targetY: -100, // Улетает вверх за экран
-                direction: Math.random() > 0.5 ? 1 : -1, // Небольшой наклон влево/вправо
-                speedY: 3 + Math.random() * 2, // Скорость вверх
-                speedX: 0.3 + Math.random() * 0.7, // Небольшое смещение в сторону
-                scale: 0.36 + Math.random() * 0.16, // В 2 раза крупнее
+                x: width * 0.2 + Math.random() * width * 0.6, // Random X position
+                y: height * 0.85, // Starts from below, from grass
+                targetY: -100, // Flies up off screen
+                direction: Math.random() > 0.5 ? 1 : -1, // Small tilt left/right
+                speedY: 3 + Math.random() * 2, // Speed upward
+                speedX: 0.3 + Math.random() * 0.7, // Small sideways movement
+                scale: 0.36 + Math.random() * 0.16, // 2x larger
                 wobble: 0,
-                frameIndex: 0, // Текущий кадр анимации (0, 1, 2)
-                frameTimer: 0  // Таймер для смены кадров
+                frameIndex: 0, // Current animation frame (0, 1, 2)
+                frameTimer: 0  // Timer for frame switching
             };
-            console.log('🐦 Воробей взлетает из травы! ↑');
+            console.log('🐦 Sparrow takes off from grass! ↑');
         }
         
         function updateBird() {
             if (!bird) return;
             
-            // Воробей летит ВВЕРХ
+            // Sparrow flies UP
             bird.y -= bird.speedY;
             bird.x += bird.direction * bird.speedX;
             bird.wobble += 0.08;
             
-            // Анимация кадров крыльев (смена каждые 5 тиков)
+            // Wing frame animation (change every 5 ticks)
             bird.frameTimer++;
             if (bird.frameTimer >= 5) {
                 bird.frameTimer = 0;
-                bird.frameIndex = (bird.frameIndex + 1) % 3; // Цикл 0 → 1 → 2 → 0
+                bird.frameIndex = (bird.frameIndex + 1) % 3; // Cycle 0 → 1 → 2 → 0
             }
             
-            // Воробей улетел вверх за экран
+            // Sparrow flew up off screen
             if (bird.y < -150) {
                 bird = null;
             }
@@ -1540,10 +1540,10 @@
         function drawBird() {
             if (!bird || !birdLoaded) return;
             
-            // Выбираем текущий кадр
+            // Select current frame
             const currentFrame = birdImages[bird.frameIndex];
             
-            // Лёгкий наклон в сторону полёта и покачивание
+            // Slight tilt in flight direction and wobble
             const rotation = bird.direction * 0.15 + Math.sin(bird.wobble) * 0.08;
             
             const w = currentFrame.width * bird.scale;
@@ -1551,7 +1551,7 @@
             
             ctx.save();
             ctx.translate(bird.x, bird.y);
-            if (bird.direction < 0) ctx.scale(-1, 1); // Отзеркаливаем если летит влево
+            if (bird.direction < 0) ctx.scale(-1, 1); // Mirror if flying left
             ctx.rotate(rotation);
             ctx.drawImage(currentFrame, -w / 2, -h / 2, w, h);
             ctx.restore();
@@ -1575,62 +1575,62 @@
                 const img = new Image();
                 img.onload = () => {
                     loadedCount++;
-                    console.log(`🌿 Загружено изображение ${index + 1}/8: ${name}`);
+                    console.log(`🌿 Loaded image ${index + 1}/8: ${name}`);
                     if (loadedCount === imageNames.length) {
                         grassImagesLoaded = true;
-                        console.log('🌿 Все изображения травы загружены!');
-                        initGrass(); // Инициализируем траву после загрузки
+                        console.log('🌿 All grass images loaded!');
+                        initGrass(); // Initialize grass after loading
                     }
                 };
                 img.onerror = () => {
-                    console.error(`❌ Ошибка загрузки: ${name}`);
+                    console.error(`❌ Loading error: ${name}`);
                 };
                 img.src = name;
                 grassImages.push(img);
             });
         }
         
-        // Класс травинки с PNG изображением
+        // Grass blade class with PNG image
         class GrassBlade {
             constructor(x, y, layer) {
                 this.x = x;
                 this.baseY = y;
                 this.layer = layer;
                 
-                // Выбираем случайное изображение
+                // Select random image
                 this.imageIndex = Math.floor(Math.random() * 8);
                 
-                // Случайный масштаб (меньше для дальних слоёв, крупнее в целом)
+                // Random scale (smaller for far layers, larger overall)
                 const baseScale = 0.4 + Math.random() * 0.6; // 0.4 - 1.0
-                this.scale = baseScale * (0.5 + layer * 0.25); // дальние меньше
+                this.scale = baseScale * (0.5 + layer * 0.25); // far ones smaller
                 
-                // Случайное отзеркаливание
+                // Random mirroring
                 this.flipX = Math.random() > 0.5 ? -1 : 1;
                 
-                // Параметры покачивания (уменьшено для плавности)
+                // Swaying parameters (reduced for smoothness)
                 this.bendAmount = 0;
                 this.targetBend = 0;
                 this.windPhase = Math.random() * Math.PI * 2;
-                this.windSpeed = 0.15 + Math.random() * 0.2; // Медленнее
+                this.windSpeed = 0.15 + Math.random() * 0.2; // Slower
                 
-                // Прозрачность по слоям
+                // Transparency by layers
                 this.alpha = 0.7 + layer * 0.1;
             }
 
             update() {
-                // Базовое покачивание — ОЧЕНЬ слабое, почти незаметное
+                // Base swaying — VERY slight, almost imperceptible
                 const baseWind = Math.sin(windTime * this.windSpeed + this.windPhase) * 0.015;
                 
-                // Порыв ветра — волна проходит по полю
+                // Wind gust — wave passes across the field
                 let gustForce = 0;
                 const distFromGust = Math.abs(this.x - windGustX);
                 if (distFromGust < 250) {
-                    // Сила порыва зависит от расстояния до "волны"
+                    // Gust strength depends on distance to the "wave"
                     const gustStrength = 1 - distFromGust / 250;
                     gustForce = windGust * gustStrength * windGustDirection;
                 }
                 
-                // Реакция на касание
+                // Touch reaction
                 let touchForce = 0;
                 if (touchPos) {
                     const img = grassImages[this.imageIndex];
@@ -1647,7 +1647,7 @@
                 }
                 
                 this.targetBend = baseWind + gustForce + touchForce;
-                this.bendAmount += (this.targetBend - this.bendAmount) * 0.06; // Очень плавно
+                this.bendAmount += (this.targetBend - this.bendAmount) * 0.06; // Very smooth
             }
 
             draw() {
@@ -1660,16 +1660,16 @@
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
                 
-                // Позиционируем от нижней точки травинки
+                // Position from bottom point of grass blade
                 ctx.translate(this.x, this.baseY);
                 
-                // Применяем наклон (skewX) для покачивания
+                // Apply tilt (skewX) for swaying
                 ctx.transform(1, 0, this.bendAmount, 1, 0, 0);
                 
-                // Отзеркаливание
+                // Mirroring
                 ctx.scale(this.flipX, 1);
                 
-                // Рисуем изображение (центрируем по X, снизу вверх)
+                // Draw image (center X, bottom to top)
                 ctx.drawImage(img, -w / 2, -h, w, h);
                 
                 ctx.restore();
@@ -1678,100 +1678,100 @@
 
         function initGrass() {
             if (!grassImagesLoaded) {
-                console.log('⏳ Ждём загрузки изображений травы...');
+                console.log('⏳ Waiting for grass images to load...');
                 return;
             }
             
             grass = [];
-            // Плотность травы - МНОГО травинок для густого поля
-            const density = width * height / 1800; // Ещё гуще!
+            // Grass density - LOTS of blades for dense field
+            const density = width * height / 1800; // Even denser!
             
             for (let layer = 0; layer < 3; layer++) {
                 const layerDensity = density / (layer + 1);
                 
                 for (let i = 0; i < layerDensity; i++) {
                     const x = Math.random() * (width + 100) - 50;
-                    // Травинки покрывают больше экрана
+                    // Grass blades cover more of the screen
                     const y = height * 0.25 + Math.random() * height * 0.75;
                     grass.push(new GrassBlade(x, y, layer));
                 }
             }
             
-            // Дополнительный слой травы ВНИЗУ чтобы закрыть дыры
-            const bottomDensity = width / 8; // МНОГО травы внизу
+            // Additional grass layer at BOTTOM to cover gaps
+            const bottomDensity = width / 8; // LOTS of grass at bottom
             for (let i = 0; i < bottomDensity; i++) {
                 const x = Math.random() * (width + 100) - 50;
-                // Травинки от 85% экрана до НИЖЕ экрана
-                const y = height * 0.85 + Math.random() * height * 0.25; // До 110% высоты
-                grass.push(new GrassBlade(x, y, 2)); // Передний план
+                // Grass blades from 85% of screen to BELOW screen
+                const y = height * 0.85 + Math.random() * height * 0.25; // Up to 110% height
+                grass.push(new GrassBlade(x, y, 2)); // Foreground
             }
             
-            // ЕЩЁ один слой — самый низ экрана, очень густой
+            // ANOTHER layer — very bottom of screen, very dense
             const veryBottomDensity = width / 6;
             for (let i = 0; i < veryBottomDensity; i++) {
                 const x = Math.random() * (width + 100) - 50;
-                const y = height * 0.95 + Math.random() * height * 0.15; // Самый низ
+                const y = height * 0.95 + Math.random() * height * 0.15; // Very bottom
                 grass.push(new GrassBlade(x, y, 2));
             }
             
-            // Ещё один слой — самый низ, очень густой
+            // Another layer — very bottom, very dense
             const edgeDensity = width / 10;
             for (let i = 0; i < edgeDensity; i++) {
                 const x = Math.random() * (width + 30) - 15;
-                const y = height + Math.random() * 50; // За нижним краем экрана
+                const y = height + Math.random() * 50; // Below bottom edge of screen
                 grass.push(new GrassBlade(x, y, 2));
             }
             
-            // Сортируем: сначала дальние (маленькие), потом ближние (большие)
+            // Sort: far ones (small) first, then near ones (large)
             grass.sort((a, b) => {
                 if (a.layer !== b.layer) return a.layer - b.layer;
                 return a.baseY - b.baseY;
             });
             
-            console.log(`🌿 Создано ${grass.length} PNG травинок`);
+            console.log(`🌿 Created ${grass.length} PNG grass blades`);
         }
         
-        // Запускаем загрузку изображений
+        // Start loading images
         loadGrassImages();
 
-        // Кэшируем фоновый градиент (мягкие тона для акварельной травы)
+        // Cache background gradient (soft tones for watercolor grass)
         let bgGradient = null;
         function updateBgGradient() {
             bgGradient = ctx.createLinearGradient(0, 0, 0, height);
-            bgGradient.addColorStop(0, '#e8f4e0');    // Светлый верх
-            bgGradient.addColorStop(0.3, '#d4e4c8');  // Переход
-            bgGradient.addColorStop(0.6, '#c5d9b8');  // Средний
-            bgGradient.addColorStop(1, '#b0c8a0');    // Зелёный низ
+            bgGradient.addColorStop(0, '#e8f4e0');    // Light top
+            bgGradient.addColorStop(0.3, '#d4e4c8');  // Transition
+            bgGradient.addColorStop(0.6, '#c5d9b8');  // Middle
+            bgGradient.addColorStop(1, '#b0c8a0');    // Green bottom
         }
         
         function animate() {
-            // Очищаем canvas (делаем прозрачным, чтобы облака были видны)
+            // Clear canvas (make transparent so clouds are visible)
             ctx.clearRect(0, 0, width, height);
             
-            // Облака на ЗАДНЕМ плане (рисуем первыми)
-            // Принудительная инициализация если облака ещё не созданы
+            // Clouds in BACKGROUND (draw first)
+            // Force initialization if clouds not yet created
             if (clouds.length === 0 && cloudsLoaded === 2) {
                 initClouds();
             }
             updateClouds();
             drawClouds();
             
-            windTime += 0.012; // Медленнее для более естественного движения
+            windTime += 0.012; // Slower for more natural movement
             
-            // Обновляем порывы ветра
+            // Update wind gusts
             updateWindGust();
             
-            // Обновляем цветы (покачивание)
+            // Update flowers (swaying)
             updateFlowers();
             
-            // КЛЕВЕР рисуем ПЕРВЫМ — ПОД травой! Виден когда раздвигаешь траву
+            // CLOVER drawn FIRST — UNDER grass! Visible when parting grass
             for (let i = 0; i < flowers.length; i++) {
                 if (flowers[i].type === 'clover') {
                     drawSingleFlower(flowers[i]);
                 }
             }
             
-            // Собираем траву и ЦВЕТЫ (колокольчики) для сортировки
+            // Collect grass and FLOWERS (bellflowers) for sorting
             const allItems = [];
             
             for (let i = 0; i < grass.length; i++) {
@@ -1779,17 +1779,17 @@
                 allItems.push({ type: 'grass', item: grass[i], y: grass[i].baseY });
             }
             
-            // Цветы (колокольчики и одуванчики) интегрируем в траву
+            // Integrate flowers (bellflowers and dandelions) into grass
             for (let i = 0; i < flowers.length; i++) {
                 if (flowers[i].type === 'flower' || flowers[i].type === 'dandelion') {
                     allItems.push({ type: 'flower', item: flowers[i], y: flowers[i].y });
                 }
             }
             
-            // Сортируем по Y
+            // Sort by Y
             allItems.sort((a, b) => a.y - b.y);
             
-            // Рисуем траву и цветы ПОВЕРХ клевера
+            // Draw grass and flowers ON TOP of clover
             for (let i = 0; i < allItems.length; i++) {
                 if (allItems[i].type === 'grass') {
                     allItems[i].item.draw();
@@ -1798,7 +1798,7 @@
                 }
             }
             
-            // Обновляем и рисуем птичку (поверх всего)
+            // Update and draw bird (on top of everything)
             updateBird();
             drawBird();
             
@@ -1814,17 +1814,17 @@
                 initAudio();
             }
             
-            // Если играет звук Сатурна - останавливаем его и возвращаем фоновые звуки
+            // If Saturn sound is playing - stop it and return background sounds
             if (currentAudio && !currentAudio.paused) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
                 unmuteBackgroundSounds();
-                hideAlien(); // Прячем инопланетянина
-                // Меняем текст кнопки обратно если модальное окно открыто
+                hideAlien(); // Hide alien
+                // Change button text back if modal is open
                 if (modal.classList.contains('show') && audioButton.style.display !== 'none') {
                     const fact = visualFacts.find(f => f.audioUrl && currentAudio.src.includes(f.audioUrl));
                     if (fact) {
-                        audioButton.textContent = fact.audioButtonText || "🔊 слушать";
+                        audioButton.textContent = fact.audioButtonText || "🔊 listen";
                     }
                 }
             }
@@ -1835,14 +1835,14 @@
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 touchMoveDistance += dist;
                 
-                // Диджитальный звук травы при движении
+                // Digital grass sound on movement
                 if (dist > 3 && Math.random() > 0.6) {
                     playGrassRustleSound();
                     touchCounter++;
                     
-                    // Жители появляются при активном касании
+                    // Creatures appear on active touch
                     if (Math.random() > 0.88) {
-                        // 30% шанс что появятся светлячки кластером
+                        // 30% chance fireflies appear in cluster
                         if (Math.random() > 0.7) {
                             spawnFirefliesCluster(x, y);
                         } else {
@@ -1850,7 +1850,7 @@
                         }
                     }
                     
-                    // Дополнительные жители каждые 10 движений
+                    // Additional creatures every 10 movements
                     if (touchCounter >= 10 && activePearls.length === 0) {
                         if (Math.random() > 0.6) {
                             spawnFirefliesCluster(x, y);
@@ -1861,7 +1861,7 @@
                     }
                 }
                 
-                // Жемчужина появляется отдельно от жителей
+                // Pearl appears separately from creatures
                 if (touchMoveDistance > 80 && activePearls.length === 0) {
                     createPearlAtTouch(x, y);
                     touchMoveDistance = 0;
@@ -1878,30 +1878,30 @@
             const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
             const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
             
-            // Запускаем существ при первом касании (даже если аудио заблокировано)
+            // Start creatures on first touch (even if audio is blocked)
             if (!creaturesStarted) {
                 creaturesStarted = true;
                 startIdleCreatures();
-                console.log('🐛 Существа запущены при первом касании!');
+                console.log('🐛 Creatures started on first touch!');
             }
             
             if (!audioInitialized) {
                 initAudio();
-                console.log('🎵 Аудио инициализировано!');
+                console.log('🎵 Audio initialized!');
             }
             
-            // Если играет звук Сатурна - останавливаем его и возвращаем фоновые звуки
+            // If Saturn sound is playing - stop it and return background sounds
             if (currentAudio && !currentAudio.paused) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
                 unmuteBackgroundSounds();
-                hideAlien(); // Прячем инопланетянина
-                console.log('🪐 Звук Сатурна остановлен (начали шевелить траву)');
-                // Меняем текст кнопки обратно если модальное окно открыто
+                hideAlien(); // Hide alien
+                console.log('🪐 Saturn sound stopped (started moving grass)');
+                // Change button text back if modal is open
                 if (modal.classList.contains('show') && audioButton.style.display !== 'none') {
                     const fact = visualFacts.find(f => f.audioUrl && currentAudio.src.includes(f.audioUrl));
                     if (fact) {
-                        audioButton.textContent = fact.audioButtonText || "🔊 слушать";
+                        audioButton.textContent = fact.audioButtonText || "🔊 listen";
                     }
                 }
             }
@@ -1920,37 +1920,37 @@
             isTouching = false;
         }
 
-        // Создание множества светлячков, рассыпающихся по большой области
+        // Create multiple fireflies scattering over a large area
         function spawnFirefliesCluster(centerX, centerY) {
-            const count = 2 + Math.floor(Math.random() * 2); // 2-3 светлячка (было 3-5)
-            const radius = 150 + Math.random() * 100; // радиус 150-250px
+            const count = 2 + Math.floor(Math.random() * 2); // 2-3 fireflies (was 3-5)
+            const radius = 150 + Math.random() * 100; // radius 150-250px
             
-            // Звук играет один раз для всего кластера
+            // Sound plays once for the entire cluster
             playFireflySound();
             
             for (let i = 0; i < count; i++) {
                 setTimeout(() => {
-                    // Случайная точка в круге вокруг касания
+                    // Random point in circle around touch
                     const angle = Math.random() * Math.PI * 2;
                     const distance = Math.random() * radius;
                     const x = centerX + Math.cos(angle) * distance;
                     const y = centerY + Math.sin(angle) * distance;
                     
-                    // Случайный цвет для каждого светлячка!
+                    // Random color for each firefly!
                     const colors = ['red', 'cyan', 'blue', 'small-blue'];
                     const randomColor = colors[Math.floor(Math.random() * colors.length)];
                     
-                    // Создаём светлячка БЕЗ звука (передаём silent = true) и с цветом
+                    // Create firefly WITHOUT sound (pass silent = true) and with color
                     spawnCreature(x, y, 'firefly', true, randomColor);
-                }, i * (100 + Math.random() * 200)); // задержка 100-300мс между каждым
+                }, i * (100 + Math.random() * 200)); // delay 100-300ms between each
             }
         }
         
-        // Создание жителя травы
+        // Create grass creature
         function spawnCreature(x, y, forceType = null, silent = false, fireflyColor = null) {
-            // Не спавним существ в космическом режиме
+            // Don't spawn creatures in space mode
             if (isSpaceMode) {
-                console.log('🚀 Космический режим - существа не появляются');
+                console.log("🚀 Space mode - creatures don't appear");
                 return;
             }
             
@@ -1965,19 +1965,19 @@
             const creature = document.createElement('div');
             creature.className = `creature ${type.class}`;
             
-            // Если это светлячок И указан цвет - добавляем класс цвета
+            // If firefly AND color specified - add color class
             if (type.class === 'firefly' && fireflyColor) {
                 creature.className += ` firefly-${fireflyColor}`;
             }
             
-            // Для бабочки создаём вложенную структуру (внешний контейнер летит, внутренний машет крыльями)
+            // For butterfly create nested structure (outer container flies, inner flaps wings)
             if (type.class === 'butterfly') {
                 const wings = document.createElement('div');
                 wings.className = 'butterfly-wings';
                 creature.appendChild(wings);
             }
             
-            // Для кузнечика и светлячков используются картинки (не эмодзи)
+            // For grasshopper and fireflies use images (not emoji)
             if (type.class !== 'butterfly' && type.class !== 'grasshopper' && type.class !== 'firefly') {
                 creature.textContent = type.emoji;
             }
@@ -1985,35 +1985,35 @@
             creature.style.left = x + 'px';
             creature.style.top = y + 'px';
             
-            // Рандомное направление движения с большей вариативностью
+            // Random movement direction with more variability
             if (type.class === 'firefly') {
-                // Светлячки летят в разных направлениях более непредсказуемо
-                const dx = (Math.random() - 0.5) * 400; // больше разброс по X
-                const dy = -(Math.random() * 250 + 80); // разная высота подъёма
-                const duration = 3 + Math.random() * 3; // от 3 до 6 секунд
+                // Fireflies fly in different directions more unpredictably
+                const dx = (Math.random() - 0.5) * 400; // more spread on X
+                const dy = -(Math.random() * 250 + 80); // different lift heights
+                const duration = 3 + Math.random() * 3; // from 3 to 6 seconds
                 creature.style.setProperty('--dx', dx + 'px');
                 creature.style.setProperty('--dy', dy + 'px');
                 creature.style.setProperty('--duration', duration + 's');
             } else if (type.class === 'grasshopper') {
-                // Кузнечики прыгают в разные стороны
+                // Grasshoppers jump in different directions
                 const dx = (Math.random() - 0.5) * 300;
                 const dy = Math.random() * 80 + 100;
                 creature.style.setProperty('--dx', dx + 'px');
                 creature.style.setProperty('--dy', dy + 'px');
                 
-                // Если прыгает влево (dx < 0), отзеркаливаем!
+                // If jumping left (dx < 0), mirror!
                 creature.style.setProperty('--flip', dx < 0 ? -1 : 1);
             } else if (type.class === 'ladybug') {
-                // Божья коровка - ползает по травинке
+                // Ladybug - crawls on grass blade
                 creature.style.zIndex = '60';
             } else {
-                // Бабочки - летят далеко через весь экран!
+                // Butterflies - fly far across the entire screen!
                 const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
                 const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
                 
-                // Летит в случайную сторону на 60-90% ширины экрана
+                // Flies in random direction across 60-90% of screen width
                 const dx = (Math.random() > 0.5 ? 1 : -1) * (vw * 0.6 + Math.random() * vw * 0.3);
-                // Высоко вверх или низко к траве
+                // High up or low to grass
                 const dy = Math.random() > 0.5 ? -(vh * 0.4 + Math.random() * vh * 0.3) : (vh * 0.2 + Math.random() * vh * 0.3);
                 
                 creature.style.setProperty('--dx', dx + 'px');
@@ -2092,7 +2092,7 @@
         function startIdleCreatures() {
             // Кузнечики появляются
             setInterval(() => {
-                // Не спавним в космическом режиме
+                // Don't spawn in space mode
                 if (isSpaceMode) return;
                 
                 if (!isTouching && Math.random() > 0.5) {
@@ -2106,7 +2106,7 @@
             
             // Божья коровка — в 3 раза реже чем кузнечики
             setInterval(() => {
-                // Не спавним в космическом режиме
+                // Don't spawn in space mode
                 if (isSpaceMode) return;
                 
                 if (!isTouching && Math.random() > 0.6) {
@@ -2514,7 +2514,7 @@
                         unmuteBackgroundSounds();
                         hideAlien();
                         if (audioButton) {
-                            audioButton.textContent = fact.audioButtonText || "🔊 слушать";
+                            audioButton.textContent = fact.audioButtonText || "🔊 listen";
                         }
                     }
                 }
@@ -2522,7 +2522,7 @@
             
             // Показываем кнопку аудио если есть
             if (fact.audioUrl) {
-                audioButton.textContent = fact.audioButtonText || "🔊 слушать";
+                audioButton.textContent = fact.audioButtonText || "🔊 listen";
                 audioButton.style.display = 'block';
                 
                 // Останавливаем предыдущее аудио если было
@@ -2555,11 +2555,11 @@
                         showAlien(); // Показываем инопланетянина!
                         
                         currentAudio.play().then(() => {
-                            audioButton.textContent = "⏸ пауза";
+                            audioButton.textContent = "⏸ pause";
                             console.log('🪐 Звук Сатурна играет!');
                         }).catch(err => {
                             console.log('❌ Не удалось воспроизвести:', err);
-                            audioButton.textContent = "❌ файл не найден";
+                            audioButton.textContent = "❌ file not found";
                             unmuteBackgroundSounds(); // Возвращаем фон если ошибка
                             hideAlien(); // Убираем инопланетянина если ошибка
                             // Возвращаем траву если ошибка
@@ -2572,9 +2572,9 @@
                     } else {
                         // ОСТАНАВЛИВАЕМ звук Сатурна и ВКЛЮЧАЕМ фоновые звуки
                         currentAudio.pause();
-                        audioButton.textContent = fact.audioButtonText || "🔊 слушать";
+                        audioButton.textContent = fact.audioButtonText || "🔊 listen";
                         unmuteBackgroundSounds();
-                        hideAlien(); // Прячем инопланетянина
+                        hideAlien(); // Hide alien
                         
                         // Возвращаем траву
                         const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('saturn');
@@ -2587,9 +2587,9 @@
                     
                     // Когда аудио закончилось - возвращаем фоновые звуки
                     currentAudio.onended = function() {
-                        audioButton.textContent = fact.audioButtonText || "🔊 слушать";
+                        audioButton.textContent = fact.audioButtonText || "🔊 listen";
                         unmuteBackgroundSounds();
-                        hideAlien(); // Прячем инопланетянина
+                        hideAlien(); // Hide alien
                         
                         // Возвращаем траву
                         const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('saturn');
@@ -2772,7 +2772,6 @@
         let focusTimeElapsed = 0; // Прошедшее время
         let focusTimerRunning = false;
         let focusTimerInterval = null; // Интервал таймера
-        let focusTimerInterval = null;
         const circumference = 2 * Math.PI * 45; // 283
         
         function updateTimerDisplay() {
@@ -2787,7 +2786,7 @@
             focusTimerRunning = true;
             focusTimerEl.classList.add('running');
             focusTimerEl.classList.remove('paused');
-            timerLabelEl.textContent = 'идёт';
+            timerLabelEl.textContent = 'running';
             
             focusTimerInterval = setInterval(() => {
                 focusTimeElapsed++;
@@ -2806,7 +2805,7 @@
             focusTimerRunning = false;
             focusTimerEl.classList.remove('running');
             focusTimerEl.classList.add('paused');
-            timerLabelEl.textContent = 'пауза';
+            timerLabelEl.textContent = 'paused';
             clearInterval(focusTimerInterval);
         }
         
@@ -2819,7 +2818,7 @@
         function resetFocusTimer() {
             stopFocusTimer();
             focusTimeElapsed = 0;
-            timerLabelEl.textContent = 'отдохни';
+            timerLabelEl.textContent = 'rest';
             updateTimerDisplay();
         }
         
