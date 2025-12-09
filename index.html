@@ -932,7 +932,7 @@
                 caption: "planets have their own soundtracks",
                 imageUrl: "Background/hubble-saturn-visible-light.jpg",
                 imageCredit: "Image credit: NASA",
-                audioUrl: "saturn/123163main_casskr1112203.mp3",
+                audioUrl: "123163main_casskr1112203.mp3",
                 audioButtonText: "🔊 listen to Saturn's sound"
             },
             {
@@ -2603,7 +2603,7 @@
                         muteBackgroundSounds();
                         
                         // Меняем фон на Сатурн только когда нажимают кнопку "слушать"
-                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('saturn');
+                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('casskr');
                         if (isSaturnCard) {
                             canvas.style.display = 'none'; // Скрываем траву
                             saturnBackground.style.display = 'block'; // Показываем фон Сатурна
@@ -2636,7 +2636,7 @@
                         hideAlien(); // Hide alien
                         
                         // Возвращаем траву
-                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('saturn');
+                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('casskr');
                         if (isSaturnCard) {
                             canvas.style.display = 'block';
                             saturnBackground.style.display = 'none';
@@ -2651,7 +2651,7 @@
                         hideAlien(); // Hide alien
                         
                         // Возвращаем траву
-                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('saturn');
+                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('casskr');
                         if (isSaturnCard) {
                             canvas.style.display = 'block';
                             saturnBackground.style.display = 'none';
