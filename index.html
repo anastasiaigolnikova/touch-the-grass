@@ -976,8 +976,10 @@
         let touchCounter = 0; // Movement counter for creature appearance
         
         // Track shown cards (to avoid repetition)
-        let shownWisdoms = []; // Indices of shown text wisdoms
-        let shownVisualFacts = []; // Indices of shown visual facts
+        let shownWisdoms = []; // Shown text wisdoms (actual strings)
+        let shownVisualFacts = []; // Shown visual facts (actual objects)
+        let lastShownWisdom = null; // Last shown wisdom to prevent repeats
+        let lastShownFact = null; // Last shown fact to prevent repeats
         let cardsShownCount = 0; // Counter of shown cards (for rabbit)
         
         // === TWO-LAYER SOUND SYSTEM ===
@@ -2253,41 +2255,45 @@
                 
                 if (isVisualCard) {
                     // Выбираем случайную непоказанную визуальную карточку
-                    let availableFacts = visualFacts.map((_, i) => i).filter(i => !shownVisualFacts.includes(i));
+                    let availableFacts = visualFacts.filter(f => !shownVisualFacts.includes(f) && f !== lastShownFact);
                     
-                    // Если все показаны - сбрасываем и перемешиваем заново
+                    // Если все показаны - сбрасываем
                     if (availableFacts.length === 0) {
                         shownVisualFacts = [];
-                        visualFacts = shuffleArray(visualFacts); // Перемешиваем заново!
-                        availableFacts = visualFacts.map((_, i) => i);
-                        console.log('🔄 Все визуальные карточки показаны, перемешиваем заново!');
+                        availableFacts = visualFacts.filter(f => f !== lastShownFact);
+                        if (availableFacts.length === 0) availableFacts = visualFacts;
+                        console.log('🔄 Все визуальные карточки показаны, начинаем заново!');
                     }
                     
-                    // Перемешиваем доступные индексы для большей случайности
-                    availableFacts = shuffleArray(availableFacts);
-                    const factIndex = availableFacts[0]; // Берём первый из перемешанных
-                    shownVisualFacts.push(factIndex);
+                    // Выбираем случайную карточку
+                    const randomIndex = Math.floor(Math.random() * availableFacts.length);
+                    const selectedFact = availableFacts[randomIndex];
+                    const factIndex = visualFacts.indexOf(selectedFact);
+                    shownVisualFacts.push(selectedFact);
+                    lastShownFact = selectedFact;
                     
-                    console.log(`🎴 Визуальная карточка #${factIndex}: "${visualFacts[factIndex].fact?.substring(0, 40)}" (показано ${shownVisualFacts.length}/${visualFacts.length})`);
+                    console.log(`🎴 Визуальная карточка: "${selectedFact.fact?.substring(0, 40)}" (показано ${shownVisualFacts.length}/${visualFacts.length})`);
                     showVisualFact(factIndex);
                 } else {
                     // Выбираем случайную непоказанную текстовую мудрость
-                    let availableWisdoms = wisdoms.map((_, i) => i).filter(i => !shownWisdoms.includes(i));
+                    let availableWisdoms = wisdoms.filter(w => !shownWisdoms.includes(w) && w !== lastShownWisdom);
                     
-                    // Если все показаны - сбрасываем и перемешиваем заново
+                    // Если все показаны - сбрасываем
                     if (availableWisdoms.length === 0) {
                         shownWisdoms = [];
-                        wisdoms = shuffleArray(wisdoms); // Перемешиваем заново!
-                        availableWisdoms = wisdoms.map((_, i) => i);
-                        console.log('🔄 Все текстовые мудрости показаны, перемешиваем заново!');
+                        availableWisdoms = wisdoms.filter(w => w !== lastShownWisdom);
+                        if (availableWisdoms.length === 0) availableWisdoms = wisdoms;
+                        console.log('🔄 Все текстовые мудрости показаны, начинаем заново!');
                     }
                     
-                    // Перемешиваем доступные индексы для большей случайности
-                    availableWisdoms = shuffleArray(availableWisdoms);
-                    const wisdomIndex = availableWisdoms[0]; // Берём первый из перемешанных
-                    shownWisdoms.push(wisdomIndex);
+                    // Выбираем случайную мудрость
+                    const randomIndex = Math.floor(Math.random() * availableWisdoms.length);
+                    const selectedWisdom = availableWisdoms[randomIndex];
+                    const wisdomIndex = wisdoms.indexOf(selectedWisdom);
+                    shownWisdoms.push(selectedWisdom);
+                    lastShownWisdom = selectedWisdom;
                     
-                    console.log(`📜 Текстовая мудрость #${wisdomIndex}: "${wisdoms[wisdomIndex]?.substring(0, 40)}..." (показано ${shownWisdoms.length}/${wisdoms.length})`);
+                    console.log(`📜 Текстовая мудрость: "${selectedWisdom?.substring(0, 40)}..." (показано ${shownWisdoms.length}/${wisdoms.length})`);
                     showWisdom(wisdomIndex);
                 }
                 
