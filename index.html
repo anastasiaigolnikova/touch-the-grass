@@ -1483,56 +1483,95 @@
         });
         
         function startBirdTimer() {
-            // Sparrow takes off — every 20-30 seconds
+            // Sparrow flies — every 45-75 seconds (much less frequent)
             setInterval(() => {
                 // Don't spawn in space mode
                 if (isSpaceMode) return;
                 
-                if (!bird && Math.random() > 0.4) { // 60% chance
+                if (!bird && Math.random() > 0.5) { // 50% chance
                     spawnBird();
                 }
-            }, 20000); // Check every 20 seconds
+            }, 45000 + Math.random() * 30000); // Check every 45-75 seconds
             
-            // First bird 5-10 seconds after loading
+            // First bird 8-15 seconds after loading
             setTimeout(() => {
                 if (!bird && !isSpaceMode) spawnBird();
-            }, 5000 + Math.random() * 5000);
+            }, 8000 + Math.random() * 7000);
         }
         
         function spawnBird() {
-            // Sparrow takes off UP from grass
+            // Random trajectory type
+            const trajectoryType = Math.floor(Math.random() * 4);
+            
+            let startX, startY, vx, vy, dir;
+            
+            switch (trajectoryType) {
+                case 0: // Takes off UP from grass (original)
+                    startX = width * 0.2 + Math.random() * width * 0.6;
+                    startY = height * 0.85;
+                    vx = (Math.random() - 0.5) * 1.5;
+                    vy = -(3 + Math.random() * 2);
+                    dir = vx > 0 ? 1 : -1;
+                    console.log('🐦 Sparrow takes off from grass! ↑');
+                    break;
+                case 1: // Flies across from LEFT to RIGHT
+                    startX = -80;
+                    startY = height * 0.15 + Math.random() * height * 0.35;
+                    vx = 3 + Math.random() * 2;
+                    vy = (Math.random() - 0.5) * 1.5;
+                    dir = 1;
+                    console.log('🐦 Bird flies left → right');
+                    break;
+                case 2: // Flies across from RIGHT to LEFT
+                    startX = width + 80;
+                    startY = height * 0.15 + Math.random() * height * 0.35;
+                    vx = -(3 + Math.random() * 2);
+                    vy = (Math.random() - 0.5) * 1.5;
+                    dir = -1;
+                    console.log('🐦 Bird flies right → left');
+                    break;
+                case 3: // Diagonal flight (corner to corner)
+                    const fromLeft = Math.random() > 0.5;
+                    startX = fromLeft ? -80 : width + 80;
+                    startY = height * 0.7 + Math.random() * height * 0.2;
+                    vx = fromLeft ? (2.5 + Math.random() * 1.5) : -(2.5 + Math.random() * 1.5);
+                    vy = -(2 + Math.random() * 1.5);
+                    dir = fromLeft ? 1 : -1;
+                    console.log('🐦 Bird flies diagonally ↗');
+                    break;
+            }
+            
             bird = {
-                x: width * 0.2 + Math.random() * width * 0.6, // Random X position
-                y: height * 0.85, // Starts from below, from grass
-                targetY: -100, // Flies up off screen
-                direction: Math.random() > 0.5 ? 1 : -1, // Small tilt left/right
-                speedY: 3 + Math.random() * 2, // Speed upward
-                speedX: 0.3 + Math.random() * 0.7, // Small sideways movement
-                scale: 0.36 + Math.random() * 0.16, // 2x larger
+                x: startX,
+                y: startY,
+                direction: dir,
+                speedY: vy,
+                speedX: vx,
+                scale: 0.36 + Math.random() * 0.16,
                 wobble: 0,
-                frameIndex: 0, // Current animation frame (0, 1, 2)
-                frameTimer: 0  // Timer for frame switching
+                frameIndex: 0,
+                frameTimer: 0
             };
-            console.log('🐦 Sparrow takes off from grass! ↑');
         }
         
         function updateBird() {
             if (!bird) return;
             
-            // Sparrow flies UP
-            bird.y -= bird.speedY;
-            bird.x += bird.direction * bird.speedX;
+            // Bird moves along its trajectory
+            bird.y += bird.speedY;
+            bird.x += bird.speedX;
             bird.wobble += 0.08;
             
             // Wing frame animation (change every 5 ticks)
             bird.frameTimer++;
             if (bird.frameTimer >= 5) {
                 bird.frameTimer = 0;
-                bird.frameIndex = (bird.frameIndex + 1) % 3; // Cycle 0 → 1 → 2 → 0
+                bird.frameIndex = (bird.frameIndex + 1) % 3;
             }
             
-            // Sparrow flew up off screen
-            if (bird.y < -150) {
+            // Bird flew off screen (any direction)
+            if (bird.y < -150 || bird.y > height + 150 || 
+                bird.x < -150 || bird.x > width + 150) {
                 bird = null;
             }
         }
@@ -1543,8 +1582,9 @@
             // Select current frame
             const currentFrame = birdImages[bird.frameIndex];
             
-            // Slight tilt in flight direction and wobble
-            const rotation = bird.direction * 0.15 + Math.sin(bird.wobble) * 0.08;
+            // Calculate tilt based on flight angle + wobble
+            const flightAngle = Math.atan2(bird.speedY, Math.abs(bird.speedX)) * 0.3;
+            const rotation = flightAngle + Math.sin(bird.wobble) * 0.08;
             
             const w = currentFrame.width * bird.scale;
             const h = currentFrame.height * bird.scale;
