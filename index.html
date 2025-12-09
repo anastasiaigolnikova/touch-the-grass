@@ -209,20 +209,17 @@
             width: 100%;
             height: 100%;
             background: transparent;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 150;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
-                        visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: opacity, visibility;
+            transition: opacity 0.3s ease;
         }
 
         #pearlModal.show {
+            display: flex;
             opacity: 1;
-            visibility: visible;
         }
 
         #pearlContent {
@@ -253,13 +250,6 @@
         #pearlModal.show #pearlContent {
             transform: translateY(0) scale(1);
             opacity: 1;
-        }
-
-        /* Hide card when space (Saturn) mode is active */
-        #pearlContent.space-hidden {
-            opacity: 0;
-            transform: translateY(10px) scale(0.98);
-            pointer-events: none;
         }
 
         @keyframes modalEvaporate {
@@ -511,7 +501,7 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            z-index: 100;
+            z-index: 250;
             opacity: 0;
             transition: opacity 0.5s ease;
             will-change: transform;
@@ -629,13 +619,16 @@
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 50;
+            z-index: 150;
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: pointer;
             opacity: 0.7;
             transition: opacity 0.3s ease;
+            pointer-events: auto;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
         #focusTimer:hover {
@@ -651,7 +644,7 @@
         .timer-circle svg {
             width: 100%;
             height: 100%;
-            transform: rotate(-90deg);
+            transform: rotate(-90deg) scaleX(-1);
         }
         
         .timer-bg {
@@ -678,6 +671,9 @@
             margin-top: 5px;
             text-transform: uppercase;
             letter-spacing: 2px;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
         
         #focusTimer.running .timer-label {
@@ -809,7 +805,8 @@
         <img src="Background/cloud2.png" class="cloud c30" alt="">
     </div>
     
-    <!-- Focus indicator / timer -->
+    <!-- Focus indicator / timer (hidden) -->
+    <!--
     <div id="focusTimer">
         <div class="timer-circle">
             <svg viewBox="0 0 100 100">
@@ -819,9 +816,12 @@
         </div>
         <div class="timer-label">rest</div>
     </div>
+    -->
     
     <!-- Saturn background (shown when Saturn card is open) -->
-    <div id="saturnBackground" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: url('Background/hubble-saturn-visible-light.jpg'); background-size: cover; background-position: center; z-index: 1; cursor: pointer;"></div>
+    <div id="saturnBackground" style="display: none; opacity: 0; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: black; z-index: 200; cursor: pointer; transition: opacity 0.35s ease;">
+        <img id="saturnImage" style="display:none; opacity:0; width:100%; height:100%; object-fit:cover; transition: opacity 0.35s ease; background:black;" />
+    </div>
 
     <div id="pearlModal">
         <div id="pearlContent">
@@ -2495,6 +2495,83 @@
             console.log('🌿 Все жители травы скрыты для космического сюжета');
         }
 
+        const saturnImgEl = document.getElementById('saturnImage');
+        const saturnImgSrc = new URL('Background/hubble-saturn-visible-light.jpg', window.location.href).href;
+        let saturnLoaded = false;
+        
+        // Предзагрузка картинки Сатурна
+        const saturnPreload = new Image();
+        saturnPreload.onload = () => { saturnLoaded = true; console.log('🪐 Картинка Сатурна предзагружена'); };
+        saturnPreload.src = saturnImgSrc;
+
+        // Универсальные функции включения/выключения космического режима
+        function enterSaturnMode() {
+            if (isSpaceMode) return; // Уже в космосе
+            isSpaceMode = true; // Ставим флаг СРАЗУ
+            
+            console.log('🪐 Входим в космический режим!');
+            
+            // Hide grass and UI, show Saturn
+            canvas.style.display = 'none';
+            document.getElementById('greenBackground').style.display = 'none';
+            document.getElementById('cloudsContainer').style.display = 'none';
+            document.getElementById('focusTimer').style.display = 'none';
+            
+            // Показываем чёрный фон сразу
+            saturnBackground.style.display = 'block';
+            saturnBackground.style.opacity = '1';
+            
+            // Показываем картинку (она уже предзагружена или загрузится)
+            saturnImgEl.src = saturnImgSrc;
+            saturnImgEl.style.display = 'block';
+            saturnImgEl.style.opacity = '1';
+
+            hideAllCreatures();
+            modal.classList.remove('show');
+            showAlien();
+        }
+
+        function exitSaturnMode() {
+            if (!isSpaceMode) return; // Уже вышли
+            
+            console.log('🪐 Выходим из космического режима!');
+            
+            // Останавливаем аудио
+            if (currentAudio && !currentAudio.paused) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            unmuteBackgroundSounds();
+            
+            saturnBackground.style.opacity = '0';
+            saturnImgEl.style.opacity = '0';
+            setTimeout(() => {
+                if (!isSpaceMode) { // Проверяем ещё раз
+                    saturnBackground.style.display = 'none';
+                    saturnImgEl.style.display = 'none';
+                }
+            }, 350);
+            canvas.style.display = 'block';
+            document.getElementById('greenBackground').style.display = 'block';
+            document.getElementById('cloudsContainer').style.display = 'block';
+            document.getElementById('focusTimer').style.display = 'block';
+            isSpaceMode = false;
+            hideAlien();
+            // НЕ показываем карточку обратно - просто возвращаем траву
+        }
+
+        // Глобальный обработчик клика по фону Сатурна и картинке — выход из космоса
+        saturnBackground.addEventListener('click', function(e) {
+            if (isSpaceMode) {
+                exitSaturnMode();
+            }
+        });
+        saturnImgEl.addEventListener('click', function(e) {
+            if (isSpaceMode) {
+                exitSaturnMode();
+            }
+        });
+
         // Функции для управления фоновыми звуками
         function muteBackgroundSounds() {
             // Полностью останавливаем ветер
@@ -2522,7 +2599,6 @@
         function showVisualFact(index) {
             const content = document.getElementById('pearlContent');
             content.classList.remove('evaporating');
-            content.classList.remove('space-hidden');
             
             const fact = visualFacts[index];
             
@@ -2564,121 +2640,83 @@
                 pearlImageCredit.style.display = 'none';
             }
             
-            // При показе карточки Сатурна трава остаётся видимой
+            // При показе карточки трава видна (НЕ трогаем saturnBackground здесь!)
             // Фон меняется только при нажатии кнопки "слушать звук Сатурна"
-            // Убеждаемся что трава видна для всех карточек
-            canvas.style.display = 'block';
-            saturnBackground.style.display = 'none';
-            
-            // Обработчик клика на фон Сатурна (будет установлен когда фон появится)
-            saturnBackground.onclick = function(e) {
-                if (e.target === saturnBackground) {
-                    canvas.style.display = 'block'; // Возвращаем траву
-                    saturnBackground.style.display = 'none'; // Скрываем фон Сатурна
-                    isSpaceMode = false; // Выключаем космический режим
-                    content.classList.remove('space-hidden'); // Показываем карточку обратно
-                    // Останавливаем аудио если играет
-                    if (currentAudio && !currentAudio.paused) {
-                        currentAudio.pause();
-                        currentAudio.currentTime = 0;
-                        unmuteBackgroundSounds();
-                        hideAlien();
-                        if (audioButton) {
-                            audioButton.textContent = fact.audioButtonText || "🔊 listen";
-                        }
-                    }
-                }
-            };
-            
-            // Показываем кнопку аудио если есть
-            if (fact.audioUrl) {
-                audioButton.textContent = fact.audioButtonText || "🔊 listen";
-                audioButton.style.display = 'block';
-                
-                // Останавливаем предыдущее аудио если было
-                if (currentAudio) {
-                    currentAudio.pause();
-                    currentAudio.currentTime = 0;
-                }
-                
-                // Обработчик кнопки
-                audioButton.onclick = function(e) {
-                    e.stopPropagation();
-                    
-                    if (!currentAudio || currentAudio.src !== fact.audioUrl) {
-                        currentAudio = new Audio(fact.audioUrl);
-                    }
-                    
-                    if (currentAudio.paused) {
-                        // ВКЛЮЧАЕМ звук Сатурна и ВЫКЛЮЧАЕМ фоновые звуки
-                        muteBackgroundSounds();
-                        
-                        // Меняем фон на Сатурн только когда нажимают кнопку "слушать"
-                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('casskr');
-                        if (isSaturnCard) {
-                            canvas.style.display = 'none'; // Скрываем траву
-                            saturnBackground.style.display = 'block'; // Показываем фон Сатурна
-                            isSpaceMode = true; // Включаем космический режим
-                            hideAllCreatures(); // Убираем всех жителей травы
-                            content.classList.add('space-hidden'); // Скрываем карточку
-                        }
-                        
-                        showAlien(); // Показываем инопланетянина!
-                        
-                        currentAudio.play().then(() => {
-                            audioButton.textContent = "⏸ pause";
-                            console.log('🪐 Звук Сатурна играет!');
-                        }).catch(err => {
-                            console.log('❌ Не удалось воспроизвести:', err);
-                            audioButton.textContent = "❌ file not found";
-                            unmuteBackgroundSounds(); // Возвращаем фон если ошибка
-                            hideAlien(); // Убираем инопланетянина если ошибка
-                            // Возвращаем траву если ошибка
-                            if (isSaturnCard) {
-                                canvas.style.display = 'block';
-                                saturnBackground.style.display = 'none';
-                                isSpaceMode = false; // Выключаем космический режим
-                                content.classList.remove('space-hidden');
-                            }
-                        });
-                    } else {
-                        // ОСТАНАВЛИВАЕМ звук Сатурна и ВКЛЮЧАЕМ фоновые звуки
-                        currentAudio.pause();
-                        audioButton.textContent = fact.audioButtonText || "🔊 listen";
-                        unmuteBackgroundSounds();
-                        hideAlien(); // Hide alien
-                        
-                        // Возвращаем траву
-                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('casskr');
-                        if (isSaturnCard) {
-                            canvas.style.display = 'block';
-                            saturnBackground.style.display = 'none';
-                            isSpaceMode = false; // Выключаем космический режим
-                            content.classList.remove('space-hidden');
-                        }
-                    }
-                    
-                    // Когда аудио закончилось - возвращаем фоновые звуки
-                    currentAudio.onended = function() {
-                        audioButton.textContent = fact.audioButtonText || "🔊 listen";
-                        unmuteBackgroundSounds();
-                        hideAlien(); // Hide alien
-                        
-                        // Возвращаем траву
-                        const isSaturnCard = fact.audioUrl && fact.audioUrl.includes('casskr');
-                        if (isSaturnCard) {
-                            canvas.style.display = 'block';
-                            saturnBackground.style.display = 'none';
-                            isSpaceMode = false; // Выключаем космический режим
-                            content.classList.remove('space-hidden');
-                        }
-                        
-                        console.log('🪐 Звук Сатурна закончился');
-                    };
-                };
-            } else {
-                audioButton.style.display = 'none';
+            if (!isSpaceMode) {
+                canvas.style.display = 'block';
             }
+            
+        // Показываем кнопку аудио если есть
+        if (fact.audioUrl) {
+            audioButton.textContent = fact.audioButtonText || "🔊 listen";
+            audioButton.style.display = 'block';
+            
+            // Останавливаем предыдущее аудио если было
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            
+            // Обработчик кнопки
+            audioButton.onclick = function(e) {
+                e.stopPropagation();
+                
+                // Saturn card detection
+                const isSaturnCard = fact.audioUrl && fact.audioUrl.toLowerCase().includes('casskr');
+                
+                // Список источников: основной и fallback в папке saturn
+                const filename = fact.audioUrl.split('/').pop();
+                const sources = [
+                    new URL(fact.audioUrl, window.location.href).href,
+                    new URL(`saturn/${filename}`, window.location.href).href
+                ];
+                
+                function tryPlay(index) {
+                    const src = sources[index];
+                    currentAudio = new Audio(src);
+                    
+                    currentAudio.play().then(() => {
+                        audioButton.textContent = "⏸ pause";
+                        console.log('🪐 Звук Сатурна играет! Источник:', src);
+                        // Космос уже включён перед tryPlay, ничего не делаем
+                        
+                        currentAudio.onended = function() {
+                            audioButton.textContent = fact.audioButtonText || "🔊 listen";
+                            unmuteBackgroundSounds();
+                            // НЕ выходим из космоса автоматически — ждём клика по фону
+                            console.log('🪐 Звук Сатурна закончился');
+                        };
+                    }).catch(err => {
+                        console.log('❌ Не удалось воспроизвести из', src, 'Ошибка:', err?.name || err);
+                        if (index + 1 < sources.length) {
+                            tryPlay(index + 1); // Пробуем следующий источник
+                        } else {
+                            audioButton.textContent = "❌ file not found";
+                            // При ошибке НЕ выходим из космоса — пользователь сам кликнет по фону
+                            console.log('🪐 Все источники не сработали, но космос остаётся');
+                        }
+                    });
+                }
+                
+                // Если уже играет — ставим на паузу и выходим из космического режима
+                if (currentAudio && !currentAudio.paused) {
+                    currentAudio.pause();
+                    audioButton.textContent = fact.audioButtonText || "🔊 listen";
+                    unmuteBackgroundSounds();
+                    // Остаёмся в космосе, пока пользователь не кликнет по фону
+                    return;
+                }
+                
+            // Тишина фона перед запуском
+            muteBackgroundSounds();
+            // Сразу включаем космос для визуального эффекта (даже до старта аудио)
+            if (isSaturnCard) enterSaturnMode();
+            // Стартуем с первого источника
+            tryPlay(0);
+            };
+        } else {
+            audioButton.style.display = 'none';
+        }
             
             modal.classList.add('show');
             modalTouchActive = false;
@@ -2723,15 +2761,11 @@
                 currentAudio.currentTime = 0;
             }
             
-            // Возвращаем фоновые звуки при закрытии
-            unmuteBackgroundSounds();
-            // Прячем инопланетянина
-            hideAlien();
-            
-            // Возвращаем траву (если был показан фон Сатурна)
-            canvas.style.display = 'block';
-            saturnBackground.style.display = 'none';
-            isSpaceMode = false; // Выключаем космический режим
+            // НЕ выходим из космоса при закрытии модалки - только по клику на фон Сатурна
+            // Возвращаем фоновые звуки если не в космосе
+            if (!isSpaceMode) {
+                unmuteBackgroundSounds();
+            }
             
             const content = document.getElementById('pearlContent');
             content.classList.add('evaporating');
@@ -2837,100 +2871,17 @@
         shownWisdoms = [];
         shownVisualFacts = [];
         
-        // === ТАЙМЕР ФОКУСА ===
+        // === ТАЙМЕР ФОКУСА (отключён) ===
         const focusTimerEl = document.getElementById('focusTimer');
-        const timerProgressEl = focusTimerEl.querySelector('.timer-progress');
-        const timerLabelEl = focusTimerEl.querySelector('.timer-label');
-        
-        let focusTime = 3 * 60; // 3 минуты в секундах
-        let focusTimeElapsed = 0; // Прошедшее время
         let focusTimerRunning = false;
-        let focusTimerInterval = null; // Интервал таймера
-        const circumference = 2 * Math.PI * 45; // 283
+        let focusTimerInterval = null;
         
-        function updateTimerDisplay() {
-            // Круг ЗАПОЛНЯЕТСЯ по мере прохождения времени
-            const progress = focusTimeElapsed / focusTime;
-            const offset = circumference * (1 - progress); // От 283 до 0
-            timerProgressEl.style.strokeDashoffset = offset;
-        }
+        function updateTimerDisplay() {}
+        function startFocusTimer() {}
+        function pauseFocusTimer() {}
         
-        function startFocusTimer() {
-            if (focusTimerRunning) return;
-            focusTimerRunning = true;
-            focusTimerEl.classList.add('running');
-            focusTimerEl.classList.remove('paused');
-            timerLabelEl.textContent = 'running';
-            
-            focusTimerInterval = setInterval(() => {
-                focusTimeElapsed++;
-                updateTimerDisplay();
-                
-                if (focusTimeElapsed >= focusTime) {
-                    stopFocusTimer();
-                    timerLabelEl.textContent = '✓';
-                    // Мягкий звуковой сигнал
-                    playFocusCompleteSound();
-                }
-            }, 1000);
-        }
-        
-        function pauseFocusTimer() {
-            focusTimerRunning = false;
-            focusTimerEl.classList.remove('running');
-            focusTimerEl.classList.add('paused');
-            timerLabelEl.textContent = 'paused';
-            clearInterval(focusTimerInterval);
-        }
-        
-        function stopFocusTimer() {
-            focusTimerRunning = false;
-            focusTimerEl.classList.remove('running', 'paused');
-            clearInterval(focusTimerInterval);
-        }
-        
-        function resetFocusTimer() {
-            stopFocusTimer();
-            focusTimeElapsed = 0;
-            timerLabelEl.textContent = 'rest';
-            updateTimerDisplay();
-        }
-        
-        function playFocusCompleteSound() {
-            if (!audioContext) return;
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            osc.frequency.setValueAtTime(528, audioContext.currentTime); // Частота любви/исцеления
-            osc.type = 'sine';
-            gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-            gain.gain.exponentialDecayTo && gain.gain.exponentialDecayTo(0.01, audioContext.currentTime + 2);
-            gain.gain.setValueAtTime(0.15, audioContext.currentTime);
-            gain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 2);
-            osc.start();
-            osc.stop(audioContext.currentTime + 2);
-        }
-        
-        // Клик по таймеру — старт/пауза
-        focusTimerEl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (focusTimeElapsed >= focusTime) {
-                resetFocusTimer();
-            } else if (focusTimerRunning) {
-                pauseFocusTimer();
-            } else {
-                startFocusTimer();
-            }
-        });
-        
-        // Двойной клик — сброс
-        focusTimerEl.addEventListener('dblclick', (e) => {
-            e.stopPropagation();
-            resetFocusTimer();
-        });
-        
-        updateTimerDisplay();
+        function stopFocusTimer() {}
+        function resetFocusTimer() {}
         
         console.log('🎲 Карточки перемешаны! Первая мудрость:', wisdoms[0]);
         console.log('🎲 Первый факт:', visualFacts[0]?.fact);
