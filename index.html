@@ -209,23 +209,26 @@
             width: 100%;
             height: 100%;
             background: transparent;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
             z-index: 100;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            visibility: hidden;
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+                        visibility 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: opacity, visibility;
         }
 
         #pearlModal.show {
-            display: flex;
             opacity: 1;
+            visibility: visible;
         }
 
         #pearlContent {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 50px 40px;
             border-radius: 32px;
             box-shadow: 
@@ -239,41 +242,32 @@
             line-height: 1.6;
             color: #2a3a2a;
             position: relative;
-            animation: modalSlideIn 0.4s ease-out;
             border: 1px solid rgba(255, 255, 255, 0.4);
+            transform: translateY(20px) scale(0.97);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        opacity 0.3s ease-out;
+            will-change: transform, opacity;
         }
 
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(30px) scale(0.95);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
+        #pearlModal.show #pearlContent {
+            transform: translateY(0) scale(1);
+            opacity: 1;
         }
 
         @keyframes modalEvaporate {
             0% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
-                filter: blur(0px);
-            }
-            50% {
-                transform: translateY(-20px) scale(1.05);
-                opacity: 0.7;
-                filter: blur(2px);
             }
             100% {
-                transform: translateY(-60px) scale(1.15);
+                transform: translateY(-40px) scale(1.08);
                 opacity: 0;
-                filter: blur(10px);
             }
         }
 
         #pearlContent.evaporating {
-            animation: modalEvaporate 0.8s ease-out forwards;
+            animation: modalEvaporate 0.5s cubic-bezier(0.4, 0, 1, 1) forwards;
         }
 
         #pearlText {
@@ -693,6 +687,8 @@
                 padding: 25px 20px;
                 font-size: 16px;
                 margin: 10px;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
             }
             
             /* Fix images in cards on mobile */
@@ -2000,7 +1996,10 @@
                 { emoji: '🦗', class: 'grasshopper', sound: playGrasshopperSound },
                 { emoji: '🐞', class: 'ladybug', sound: null }
             ];
-            const type = forceType ? types.find(t => t.class === forceType) : types[Math.floor(Math.random() * types.length)];
+            
+            // For random selection, exclude ladybug (it has its own timer)
+            const randomTypes = types.filter(t => t.class !== 'ladybug');
+            const type = forceType ? types.find(t => t.class === forceType) : randomTypes[Math.floor(Math.random() * randomTypes.length)];
             
             const creature = document.createElement('div');
             creature.className = `creature ${type.class}`;
@@ -2044,8 +2043,13 @@
                 // If jumping left (dx < 0), mirror!
                 creature.style.setProperty('--flip', dx < 0 ? -1 : 1);
             } else if (type.class === 'ladybug') {
-                // Ladybug - crawls on grass blade
+                // Ladybug - crawls on grass blade (use spawnLadybug instead)
+                if (activeLadybug && document.body.contains(activeLadybug)) {
+                    creature.remove();
+                    return; // Don't spawn duplicate
+                }
                 creature.style.zIndex = '60';
+                activeLadybug = creature;
             } else {
                 // Butterflies - fly far across the entire screen!
                 const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -2073,7 +2077,10 @@
             else if (type.class === 'firefly') duration = 6000;
             else if (type.class === 'ladybug') duration = 8000;
             
-            setTimeout(() => creature.remove(), duration);
+            setTimeout(() => {
+                creature.remove();
+                if (type.class === 'ladybug') activeLadybug = null;
+            }, duration);
         }
 
         // Появление кролика
@@ -2158,8 +2165,16 @@
         }
         
         // Божья коровка выползает на листик
+        let activeLadybug = null; // Only one ladybug at a time!
+        
         function spawnLadybug() {
             if (isSpaceMode) return;
+            
+            // Don't spawn if one already exists
+            if (activeLadybug && document.body.contains(activeLadybug)) {
+                console.log('🐞 Ladybug already on screen, skipping');
+                return;
+            }
             
             const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
             const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
@@ -2176,10 +2191,14 @@
             ladybug.style.zIndex = '60';
             
             document.body.appendChild(ladybug);
+            activeLadybug = ladybug;
             console.log('🐞 Божья коровка выползла!');
             
             // Удаляем после анимации (8 секунд)
-            setTimeout(() => ladybug.remove(), 8000);
+            setTimeout(() => {
+                ladybug.remove();
+                activeLadybug = null;
+            }, 8000);
         }
         
         // Кролик может появиться при активном касании травы
@@ -2900,6 +2919,29 @@
         
         console.log('🎲 Карточки перемешаны! Первая мудрость:', wisdoms[0]);
         console.log('🎲 Первый факт:', visualFacts[0]?.fact);
+        
+        // === PAUSE SOUNDS WHEN TAB IS HIDDEN ===
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Tab hidden - pause all sounds
+                if (ambientAudio) {
+                    ambientAudio.pause();
+                }
+                if (audioContext && audioContext.state === 'running') {
+                    audioContext.suspend();
+                }
+                console.log('🔇 Tab hidden - sounds paused');
+            } else {
+                // Tab visible - resume sounds
+                if (ambientAudio && !isSpaceMode) {
+                    ambientAudio.play().catch(() => {});
+                }
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                console.log('🔊 Tab visible - sounds resumed');
+            }
+        });
         
         // === ИНИЦИАЛИЗАЦИЯ ===
         // initGrass() вызывается автоматически после загрузки PNG изображений
