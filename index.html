@@ -1520,24 +1520,24 @@
                 case 0: // Takes off UP from grass (original)
                     startX = width * 0.2 + Math.random() * width * 0.6;
                     startY = height * 0.85;
-                    vx = (Math.random() - 0.5) * 1.5;
-                    vy = -(3 + Math.random() * 2);
+                    vx = (Math.random() - 0.5) * 3;
+                    vy = -(6 + Math.random() * 4);
                     dir = vx > 0 ? 1 : -1;
                     console.log('🐦 Sparrow takes off from grass! ↑');
                     break;
                 case 1: // Flies across from LEFT to RIGHT
                     startX = -80;
                     startY = height * 0.15 + Math.random() * height * 0.35;
-                    vx = 3 + Math.random() * 2;
-                    vy = (Math.random() - 0.5) * 1.5;
+                    vx = 6 + Math.random() * 4;
+                    vy = (Math.random() - 0.5) * 2;
                     dir = 1;
                     console.log('🐦 Bird flies left → right');
                     break;
                 case 2: // Flies across from RIGHT to LEFT
                     startX = width + 80;
                     startY = height * 0.15 + Math.random() * height * 0.35;
-                    vx = -(3 + Math.random() * 2);
-                    vy = (Math.random() - 0.5) * 1.5;
+                    vx = -(6 + Math.random() * 4);
+                    vy = (Math.random() - 0.5) * 2;
                     dir = -1;
                     console.log('🐦 Bird flies right → left');
                     break;
@@ -1545,8 +1545,8 @@
                     const fromLeft = Math.random() > 0.5;
                     startX = fromLeft ? -80 : width + 80;
                     startY = height * 0.7 + Math.random() * height * 0.2;
-                    vx = fromLeft ? (2.5 + Math.random() * 1.5) : -(2.5 + Math.random() * 1.5);
-                    vy = -(2 + Math.random() * 1.5);
+                    vx = fromLeft ? (5 + Math.random() * 3) : -(5 + Math.random() * 3);
+                    vy = -(4 + Math.random() * 3);
                     dir = fromLeft ? 1 : -1;
                     console.log('🐦 Bird flies diagonally ↗');
                     break;
