@@ -255,6 +255,13 @@
             opacity: 1;
         }
 
+        /* Hide card when space (Saturn) mode is active */
+        #pearlContent.space-hidden {
+            opacity: 0;
+            transform: translateY(10px) scale(0.98);
+            pointer-events: none;
+        }
+
         @keyframes modalEvaporate {
             0% {
                 transform: translateY(0) scale(1);
@@ -2515,6 +2522,7 @@
         function showVisualFact(index) {
             const content = document.getElementById('pearlContent');
             content.classList.remove('evaporating');
+            content.classList.remove('space-hidden');
             
             const fact = visualFacts[index];
             
@@ -2568,6 +2576,7 @@
                     canvas.style.display = 'block'; // Возвращаем траву
                     saturnBackground.style.display = 'none'; // Скрываем фон Сатурна
                     isSpaceMode = false; // Выключаем космический режим
+                    content.classList.remove('space-hidden'); // Показываем карточку обратно
                     // Останавливаем аудио если играет
                     if (currentAudio && !currentAudio.paused) {
                         currentAudio.pause();
@@ -2611,6 +2620,7 @@
                             saturnBackground.style.display = 'block'; // Показываем фон Сатурна
                             isSpaceMode = true; // Включаем космический режим
                             hideAllCreatures(); // Убираем всех жителей травы
+                            content.classList.add('space-hidden'); // Скрываем карточку
                         }
                         
                         showAlien(); // Показываем инопланетянина!
@@ -2628,6 +2638,7 @@
                                 canvas.style.display = 'block';
                                 saturnBackground.style.display = 'none';
                                 isSpaceMode = false; // Выключаем космический режим
+                                content.classList.remove('space-hidden');
                             }
                         });
                     } else {
@@ -2643,6 +2654,7 @@
                             canvas.style.display = 'block';
                             saturnBackground.style.display = 'none';
                             isSpaceMode = false; // Выключаем космический режим
+                            content.classList.remove('space-hidden');
                         }
                     }
                     
@@ -2658,6 +2670,7 @@
                             canvas.style.display = 'block';
                             saturnBackground.style.display = 'none';
                             isSpaceMode = false; // Выключаем космический режим
+                            content.classList.remove('space-hidden');
                         }
                         
                         console.log('🪐 Звук Сатурна закончился');
